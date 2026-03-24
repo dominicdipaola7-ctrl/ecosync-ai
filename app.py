@@ -424,7 +424,7 @@ def _generate_pdf(report, patient):
             continue
 
         if (line and (
-            (line[0].isdigit() and len(line) > 2 and line[1] in ".):") or
+            (line[0].isdigit() and len(line) > 2 and line[1] in ".):" ) or
             line.isupper() or
             (line.startswith("**") and line.endswith("**"))
         )):
