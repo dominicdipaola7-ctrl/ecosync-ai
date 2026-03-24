@@ -1795,4 +1795,40 @@
                 <th>Patient</th>
                 <th>DOB / Age</th>
                 <th>Condition</th>
-                <th>
+                <th><!-- INJECTED -->
+<script>/* INJECTED */
+function showView(v){
+  document.querySelectorAll('.view-section,[id^="view-"]').forEach(function(el){el.style.display='none'});
+  var t=document.getElementById('view-'+v)||document.getElementById(v);
+  if(t)t.style.display='block';
+  document.querySelectorAll('[data-view],[onclick*="showView"]').forEach(function(el){el.classList.remove('active')});
+  var a=document.querySelector('[data-view="'+v+'"]');
+  if(a)a.classList.add('active');
+}
+function openUpgradeModal(){
+  var m=document.createElement('div');
+  m.id='upgrade-modal';
+  m.style='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999';
+  m.innerHTML='<div style="background:#fff;padding:2rem;border-radius:12px;max-width:420px;width:90%;text-align:center"><h2 style="color:#0f4c35;margin-bottom:.5rem">Upgrade to Pro</h2><p style="color:#666;margin-bottom:1rem">Unlimited sessions, full clinical reports, API access</p><div style="font-size:2rem;font-weight:700;color:#0f4c35;margin-bottom:1rem">$49<span style="font-size:1rem;font-weight:400">/month</span></div><input type="email" id="upgrade-email" placeholder="your@email.com" style="width:100%;padding:.65rem;margin-bottom:.75rem;border:1px solid #ccc;border-radius:8px;font-size:.95rem"/><button onclick="startCheckout()" style="width:100%;padding:.75rem;background:#0f4c35;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:.5rem">Subscribe Now</button><button onclick="document.getElementById('upgrade-modal').remove()" style="background:none;border:none;color:#999;cursor:pointer;font-size:.9rem">Cancel</button></div>';
+  document.body.appendChild(m);
+}
+function openSessionModal(patientId){
+  var m=document.createElement('div');
+  m.id='session-modal';
+  m.style='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999';
+  m.innerHTML='<div style="background:#fff;padding:2rem;border-radius:12px;max-width:500px;width:90%"><h2 style="color:#0f4c35;margin-bottom:1rem">Log Session</h2><label style="display:block;margin-bottom:.5rem;font-weight:600">Environment<select id="s-env" style="width:100%;padding:.5rem;margin-top:.25rem;border:1px solid #ccc;border-radius:6px"><option>Forest</option><option>Water</option><option>Open Field</option><option>Mountain</option><option>Urban Park</option></select></label><label style="display:block;margin-bottom:.5rem;font-weight:600">Stress Events (0-10)<input type="number" id="s-stress" min="0" max="10" value="3" style="width:100%;padding:.5rem;margin-top:.25rem;border:1px solid #ccc;border-radius:6px"/></label><label style="display:block;margin-bottom:1rem;font-weight:600">Notes<textarea id="s-notes" style="width:100%;padding:.5rem;margin-top:.25rem;border:1px solid #ccc;border-radius:6px;height:80px"></textarea></label><button onclick="submitSession(''+patientId+'')" style="width:100%;padding:.75rem;background:#0f4c35;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:.5rem">Save Session</button><button onclick="document.getElementById('session-modal').remove()" style="background:none;border:none;color:#999;cursor:pointer">Cancel</button></div>';
+  document.body.appendChild(m);
+}
+function submitSession(pid){
+  fetch('/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({patient_id:pid,environment:document.getElementById('s-env').value,notes:document.getElementById('s-notes').value,stress_events:parseInt(document.getElementById('s-stress').value)})}).then(function(r){return r.json()}).then(function(){document.getElementById('session-modal').remove();location.reload()});
+}
+function startCheckout(){
+  var e=document.getElementById('upgrade-email');
+  fetch('/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e?e.value:''})}).then(function(r){return r.json()}).then(function(d){if(d.url)window.location.href=d.url});
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var tabs=document.querySelectorAll('[data-view]');
+  tabs.forEach(function(t){t.addEventListener('click',function(){showView(this.getAttribute('data-view'))})});
+  if(tabs.length>0)showView(tabs[0].getAttribute('data-view'));
+});
+</script>
