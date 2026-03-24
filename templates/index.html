@@ -518,4 +518,650 @@
     <div class="view active" id="view-dashboard">
       <div class="hero">
         <h1>Welcome to Eco-Sync AI 🌿</h1>
-        <p>AI-powered nature-based therapy platform with Remote Therapeutic Monitoring. Generate insurance-ready clinical reports, track patient progress
+        <p>AI-powered nature-based therapy platform with Remote Therapeutic Monitoring. Generate insurance-ready clinical reports, track patient progress, and monitor therapeutic outcomes.</p>
+        <div class="hero-actions">
+          <button class="btn btn-demo" onclick="openSessionModal()">🌿 Log New Session</button>
+          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);" onclick="showView('patients')">👤 View Patients</button>
+          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);" onclick="showView('reports')">📋 View Reports</button>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👤</div>
+          <div class="stat-val" id="dash-patients">0</div>
+          <div class="stat-lbl">Total Patients</div>
+          <div class="stat-change">Active caseload</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🌳</div>
+          <div class="stat-val" id="dash-sessions">0</div>
+          <div class="stat-lbl">Sessions Logged</div>
+          <div class="stat-change">Nature-based therapy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-val" id="dash-reports">0</div>
+          <div class="stat-lbl">Reports Generated</div>
+          <div class="stat-change">Insurance-ready</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💚</div>
+          <div class="stat-val" id="dash-avg-ror">—</div>
+          <div class="stat-lbl">Avg. RoR Score</div>
+          <div class="stat-change">Rate of Response</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🌿 Recent Activity</div>
+          <button class="btn btn-outline btn-sm" onclick="showView('sessions')">View All</button>
+        </div>
+        <div class="card-body" id="dash-activity">
+          <div class="empty">
+            <div class="empty-icon">🌱</div>
+            <div class="empty-title">No activity yet</div>
+            <div class="empty-sub">Log your first nature therapy session to get started.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PATIENTS VIEW ════ -->
+    <div class="view" id="view-patients">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👤 Patient Roster</div>
+          <button class="btn btn-primary btn-sm" onclick="openPatientModal()">➕ Add Patient</button>
+        </div>
+        <div class="card-body" id="patient-list">
+          <div class="empty">
+            <div class="empty-icon">👤</div>
+            <div class="empty-title">No patients yet</div>
+            <div class="empty-sub">Add your first patient to begin tracking their nature therapy progress.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SESSIONS VIEW ════ -->
+    <div class="view" id="view-sessions">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🌳 Nature Therapy Sessions</div>
+          <button class="btn btn-primary btn-sm" onclick="openSessionModal()">🌿 Log Session</button>
+        </div>
+        <div class="card-body" id="session-list">
+          <div class="empty">
+            <div class="empty-icon">🌳</div>
+            <div class="empty-title">No sessions logged</div>
+            <div class="empty-sub">Log your first nature therapy session to start building patient records.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ REPORTS VIEW ════ -->
+    <div class="view" id="view-reports">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Clinical Reports</div>
+          <button class="btn btn-primary btn-sm" onclick="openReportModal()">✨ Generate Report</button>
+        </div>
+        <div class="card-body" id="report-list">
+          <div class="empty">
+            <div class="empty-icon">📋</div>
+            <div class="empty-title">No reports generated</div>
+            <div class="empty-sub">Generate AI-powered clinical reports from your session data.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ ANALYTICS VIEW ════ -->
+    <div class="view" id="view-analytics">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Analytics Overview</div>
+        </div>
+        <div class="card-body">
+          <div class="analytics-grid">
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-header">
+                <div class="card-title">📈 Session Outcomes</div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap">
+                  <canvas id="chart-outcomes"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <div class="card-header">
+                <div class="card-title">🌿 Environment Types</div>
+              </div>
+              <div class="card-body">
+                <div class="chart-wrap">
+                  <canvas id="chart-envs"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║              MODALS                  ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+
+<!-- UPGRADE MODAL -->
+<div class="modal-bg" id="modal-upgrade">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚡ Upgrade to Pro</div>
+      <button class="modal-close" onclick="closeModal('modal-upgrade')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:1rem 0 1.5rem;">
+        <div style="font-size:3rem;margin-bottom:.5rem;">🌿</div>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:.5rem;">Eco-Sync Pro</h2>
+        <p style="color:var(--text-lt);font-size:.9rem;">Unlock unlimited reports, patients, and advanced features.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> <strong>Unlimited</strong> clinical report generation</div>
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> <strong>Unlimited</strong> patient profiles</div>
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> PDF export for insurance billing</div>
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Advanced analytics & outcome tracking</div>
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Priority AI report generation</div>
+        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Nature environment benchmarking</div>
+      </div>
+      <div style="text-align:center;margin-bottom:1rem;">
+        <div style="font-size:2rem;font-weight:700;color:var(--forest);">$29<span style="font-size:1rem;font-weight:400;color:var(--text-lt);">/month</span></div>
+        <div style="font-size:.78rem;color:var(--text-lt);">Cancel anytime. No contracts.</div>
+      </div>
+      <button class="btn btn-warn btn-block" id="upgrade-btn" onclick="doUpgrade()">⚡ Upgrade Now — $29/mo</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATIENT MODAL -->
+<div class="modal-bg" id="modal-patient">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ Add Patient</div>
+      <button class="modal-close" onclick="closeModal('modal-patient')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="p-fname" placeholder="Jane"/>
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="p-lname" placeholder="Smith"/>
+        </div>
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="date" id="p-dob"/>
+        </div>
+        <div class="form-group">
+          <label>Primary Diagnosis</label>
+          <input type="text" id="p-dx" placeholder="e.g. Anxiety Disorder"/>
+        </div>
+        <div class="form-group full">
+          <label>Treatment Goals</label>
+          <textarea id="p-goals" placeholder="Describe the patient's treatment goals..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Insurance ID</label>
+          <input type="text" id="p-ins" placeholder="INS-12345"/>
+        </div>
+        <div class="form-group">
+          <label>Preferred Environment</label>
+          <select id="p-env">
+            <option value="forest">🌲 Forest</option>
+            <option value="water">💧 Water / Coastal</option>
+            <option value="field">🌾 Field / Meadow</option>
+            <option value="garden">🌸 Garden</option>
+            <option value="mixed">🌿 Mixed / Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-patient')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePatient()">💾 Save Patient</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-bg" id="modal-session">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">🌿 Log Nature Therapy Session</div>
+      <button class="modal-close" onclick="closeModal('modal-session')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Patient *</label>
+          <select id="s-patient"></select>
+        </div>
+        <div class="form-group">
+          <label>Session Date *</label>
+          <input type="date" id="s-date"/>
+        </div>
+        <div class="form-group">
+          <label>Duration (minutes)</label>
+          <input type="number" id="s-duration" value="60" min="5" max="480"/>
+        </div>
+        <div class="form-group">
+          <label>Environment</label>
+          <select id="s-env">
+            <option value="forest">🌲 Forest</option>
+            <option value="water">💧 Water / Coastal</option>
+            <option value="field">🌾 Field / Meadow</option>
+            <option value="garden">🌸 Garden</option>
+            <option value="mixed">🌿 Mixed / Other</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Pre-Session Stress Level: <span id="pre-stress-val">5</span>/10</label>
+          <div class="range-wrap">
+            <input type="range" id="s-pre-stress" min="1" max="10" value="5" oninput="updateRange(this,'pre-stress-val')"/>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Post-Session Stress Level: <span id="post-stress-val">3</span>/10</label>
+          <div class="range-wrap">
+            <input type="range" id="s-post-stress" min="1" max="10" value="3" oninput="updateRange(this,'post-stress-val')"/>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Clinical Observations</label>
+          <textarea id="s-observations" rows="3" placeholder="Describe patient engagement, behavioral observations, therapeutic progress..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Interventions Used</label>
+          <textarea id="s-interventions" placeholder="e.g. Mindful walking, sensory grounding, nature journaling..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Session Goals Addressed</label>
+          <textarea id="s-goals-addressed" placeholder="Which treatment goals were addressed in this session..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-session')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSession()">💾 Log Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT GENERATE MODAL -->
+<div class="modal-bg" id="modal-report-gen">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✨ Generate Clinical Report</div>
+      <button class="modal-close" onclick="closeModal('modal-report-gen')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Patient *</label>
+          <select id="r-patient"></select>
+        </div>
+        <div class="form-group">
+          <label>Report Period Start</label>
+          <input type="date" id="r-start"/>
+        </div>
+        <div class="form-group">
+          <label>Report Period End</label>
+          <input type="date" id="r-end"/>
+        </div>
+        <div class="form-group full">
+          <label>Report Type</label>
+          <select id="r-type">
+            <option value="progress">Progress Note</option>
+            <option value="monthly">Monthly Summary</option>
+            <option value="insurance">Insurance Authorization</option>
+            <option value="discharge">Discharge Summary</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Additional Clinical Context</label>
+          <textarea id="r-context" placeholder="Any additional context for the AI to include..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-report-gen')">Cancel</button>
+      <button class="btn btn-primary" id="gen-report-btn" onclick="generateReport()">✨ Generate Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT VIEW MODAL -->
+<div class="modal-bg" id="modal-report-view">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">📋 Clinical Report</div>
+      <button class="modal-close" onclick="closeModal('modal-report-view')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="report-content" id="report-view-content"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-report-view')">Close</button>
+      <button class="btn btn-primary" id="report-pdf-btn">📄 Download PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+const STATE = {
+  patients: {},
+  sessions: {},
+  reports: {},
+  report_count: {{ report_count }},
+  tier: '{{ tier }}',
+  free_limit: {{ free_limit }}
+};
+
+// Seed from Jinja
+{% for pid, p in patients.items() %}
+STATE.patients['{{ pid }}'] = {{ p | tojson }};
+{% endfor %}
+{% for sid, s in sessions.items() %}
+STATE.sessions['{{ sid }}'] = {{ s | tojson }};
+{% endfor %}
+{% for rid, r in reports.items() %}
+STATE.reports['{{ rid }}'] = {{ r | tojson }};
+{% endfor %}
+
+// ═══════════════════════════════════════════════════════
+//  VIEWS
+// ═══════════════════════════════════════════════════════
+function showView(name) {
+  // Hide all views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // Remove active from all nav items
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  // Show target view
+  const view = document.getElementById('view-' + name);
+  if (view) view.classList.add('active');
+
+  // Activate nav item
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+
+  // Refresh content
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'patients') renderPatients();
+  if (name === 'sessions') renderSessions();
+  if (name === 'reports') renderReports();
+  if (name === 'analytics') renderAnalytics();
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODALS
+// ═══════════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function openUpgradeModal() {
+  openModal('modal-upgrade');
+}
+
+function openPatientModal() {
+  // Clear form
+  ['p-fname','p-lname','p-dob','p-dx','p-goals','p-ins'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  openModal('modal-patient');
+}
+
+function openSessionModal() {
+  // Populate patient dropdown
+  const sel = document.getElementById('s-patient');
+  sel.innerHTML = '';
+  const pids = Object.keys(STATE.patients);
+  if (pids.length === 0) {
+    sel.innerHTML = '<option value="">— No patients yet —</option>';
+  } else {
+    pids.forEach(pid => {
+      const p = STATE.patients[pid];
+      const opt = document.createElement('option');
+      opt.value = pid;
+      opt.textContent = p.first_name + ' ' + p.last_name;
+      sel.appendChild(opt);
+    });
+  }
+  // Set default date to today
+  document.getElementById('s-date').value = new Date().toISOString().split('T')[0];
+  openModal('modal-session');
+}
+
+function openReportModal() {
+  // Populate patient dropdown
+  const sel = document.getElementById('r-patient');
+  sel.innerHTML = '';
+  const pids = Object.keys(STATE.patients);
+  if (pids.length === 0) {
+    sel.innerHTML = '<option value="">— No patients yet —</option>';
+  } else {
+    pids.forEach(pid => {
+      const p = STATE.patients[pid];
+      const opt = document.createElement('option');
+      opt.value = pid;
+      opt.textContent = p.first_name + ' ' + p.last_name;
+      sel.appendChild(opt);
+    });
+  }
+  // Default dates
+  const today = new Date();
+  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  document.getElementById('r-start').value = firstOfMonth.toISOString().split('T')[0];
+  document.getElementById('r-end').value = today.toISOString().split('T')[0];
+  openModal('modal-report-gen');
+}
+
+// Close modals on background click
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
+function toast(msg, type='success') {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'toast toast-' + type;
+  t.innerHTML = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  RANGE SLIDER
+// ═══════════════════════════════════════════════════════
+function updateRange(input, labelId) {
+  document.getElementById(labelId).textContent = input.value;
+  const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+  input.style.setProperty('--pct', pct + '%');
+}
+
+// Init range sliders on page load
+document.querySelectorAll('input[type=range]').forEach(r => updateRange(r, r.id.replace('s-','').replace('-stress','') + '-stress-val'));
+
+// ═══════════════════════════════════════════════════════
+//  UPGRADE
+// ═══════════════════════════════════════════════════════
+function doUpgrade() {
+  const btn = document.getElementById('upgrade-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Processing...';
+
+  fetch('/upgrade', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      STATE.tier = 'pro';
+      closeModal('modal-upgrade');
+      toast('🎉 Upgraded to Pro! Enjoy unlimited reports.', 'success');
+      // Update UI
+      document.getElementById('tier-badge').className = 'badge badge-pro';
+      document.getElementById('tier-badge').textContent = '⭐ Pro';
+      btn.disabled = false;
+      btn.innerHTML = '⚡ Upgrade Now — $29/mo';
+    })
+    .catch(() => {
+      toast('Upgrade failed. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '⚡ Upgrade Now — $29/mo';
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+//  PATIENTS
+// ═══════════════════════════════════════════════════════
+function savePatient() {
+  const fname = document.getElementById('p-fname').value.trim();
+  const lname = document.getElementById('p-lname').value.trim();
+  if (!fname || !lname) { toast('First and last name are required.', 'error'); return; }
+
+  const data = {
+    first_name: fname,
+    last_name: lname,
+    dob: document.getElementById('p-dob').value,
+    diagnosis: document.getElementById('p-dx').value.trim(),
+    goals: document.getElementById('p-goals').value.trim(),
+    insurance_id: document.getElementById('p-ins').value.trim(),
+    preferred_env: document.getElementById('p-env').value
+  };
+
+  fetch('/api/patients', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.error) { toast(res.error, 'error'); return; }
+    STATE.patients[res.id] = res.patient;
+    closeModal('modal-patient');
+    toast('✅ Patient added successfully!', 'success');
+    renderPatients();
+    renderDashboard();
+  })
+  .catch(() => toast('Failed to save patient.', 'error'));
+}
+
+function renderPatients() {
+  const container = document.getElementById('patient-list');
+  const pids = Object.keys(STATE.patients);
+  if (pids.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">👤</div><div class="empty-title">No patients yet</div><div class="empty-sub">Add your first patient to begin tracking their nature therapy progress.</div></div>`;
+    return;
+  }
+  container.innerHTML = pids.map(pid => {
+    const p = STATE.patients[pid];
+    const initials = (p.first_name[0] || '') + (p.last_name[0] || '');
+    const sessionCount = Object.values(STATE.sessions).filter(s => s.patient_id === pid).length;
+    return `
+      <div class="patient-card">
+        <div class="patient-avatar">${initials.toUpperCase()}</div>
+        <div class="patient-info">
+          <div class="patient-name">${p.first_name} ${p.last_name}</div>
+          <div class="patient-dx">${p.diagnosis || 'No diagnosis listed'}</div>
+          <div class="patient-meta">${sessionCount} session(s) • ${p.preferred_env || 'mixed'} environment</div>
+        </div>
+        <div class="patient-actions">
+          <button class="btn btn-outline btn-xs" onclick="viewPatientSessions('${pid}')">🌳 Sessions</button>
+          <button class="btn btn-primary btn-xs" onclick="generateReportForPatient('${pid}')">📋 Report</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function viewPatientSessions(pid) {
+  showView('sessions');
+}
+
+function generateReportForPatient(pid) {
+  openReportModal();
+  setTimeout(() => {
+    const sel = document.getElementById('r-patient');
+    if (sel) sel.value = pid;
+  }, 50);
+}
+
+// ═══════════════════════════════════════════════════════
+//  SESSIONS
+// ═══════════════════════════════════════════════════════
+function saveSession() {
+  const patientId = document.getElementById('s-patient').value;
+  const sessionDate = document.getElementById('s-date').value;
+  if (!patientId) { toast('Please select a patient.', 'error'); return; }
+  if (!sessionDate) { toast('Please select a session date.', 'error'); return; }
+
+  const preStress = parseInt(document.getElementById('s-pre-stress').value);
+  const postStress = parseInt(document.getElementById('s-post-stress').value);
+  const ror = Math.round(((preStress - postStress) / preStress) * 100);
+
+  const data = {
+    patient_id: patientId,
+    date: sessionDate,
+    duration: parseInt(document.getElementById('s-duration').value) || 60,
+    environment: document.getElementById('s-env').value,
+    pre_stress: preStress,
+    post_stress: postStress,
+    ror: ror,
+    observations: document.getElementById('s-observations').value.trim(),
+    interventions: document.getElementById('s-interventions').value.trim(),
+    goals_addressed: document.getElementById('s-goals-addressed').value.trim()
+  };
+
+  fetch('/api/sessions', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.error) { toast(res.error, 'error'); return; }
+    STATE.sessions[res.id] = res.session;
+    closeModal('modal-session');
+    toast('✅ Session logged successfully!', 'success');
+    renderSessions();
+    renderDashboard();
+  })
+  .catch(() => toast('Failed to save session.', 'error'));
+}
+
+function renderSessions() {
+  const container = document.getElementById('session-list');
+  const sids = Object.keys(STATE.sessions);
+  if (sids.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">🌳</div><div class="empty-title">No sessions logged</div><div class="empty-sub">Log
