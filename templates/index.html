@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eco-Sync AI | Nature-Based RTM Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --forest:    #0f4c35;
+      --forest-mid:#1a6b4a;
+      --forest-lt: #2d9e6b;
+      --mint:      #4a9e7f;
+      --sage:      #7dc4a0;
+      --pale:      #e8f4ef;
+      --paler:     #f0f7f4;
+      --white:     #ffffff;
+      --text:      #1a2e25;
+      --text-mid:  #3a5a4a;
+      --text-lt:   #6b8f7e;
+      --border:    #c8e0d8;
+      --warn:      #e07b39;
+      --warn-lt:   #fdf0e8;
+      --danger:    #c0392b;
+      --shadow:    0 2px 16px rgba(15,76,53,.10);
+      --shadow-lg: 0 8px 40px rgba(15,76,53,.16);
+      --radius:    12px;
+      --radius-sm: 8px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:'Inter',sans-serif;
+      background:#f4faf7;
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────── */
+    ::-webkit-scrollbar{width:7px;height:7px;}
+    ::-webkit-scrollbar-track{background:var(--paler);}
+    ::-webkit-scrollbar-thumb{background:var(--sage);border-radius:10px;}
+
+    /* ─── TOPBAR ─────────────────────────────────── */
+    .topbar{
+      background:var(--forest);
+      color:#fff;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 2rem;
+      height:62px;
+      position:sticky;top:0;z-index:100;
+      box-shadow:0 2px 12px rgba(0,0,0,.18);
+    }
+    .topbar-brand{display:flex;align-items:center;gap:.7rem;}
+    .topbar-logo{
+      width:36px;height:36px;
+      background:var(--mint);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;
+    }
+    .topbar-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:.02em;}
+    .topbar-sub{font-size:.7rem;opacity:.7;letter-spacing:.05em;text-transform:uppercase;}
+    .topbar-actions{display:flex;align-items:center;gap:.8rem;}
+
+    .badge{
+      display:inline-flex;align-items:center;gap:.3rem;
+      padding:.25rem .75rem;border-radius:20px;
+      font-size:.75rem;font-weight:600;letter-spacing:.03em;
+    }
+    .badge-free{background:rgba(255,255,255,.15);color:#fff;}
+    .badge-pro{background:linear-gradient(135deg,#f9c74f,#f3722c);color:#fff;}
+    .badge-count{background:rgba(255,255,255,.12);color:#fff;font-size:.72rem;}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:.4rem;
+      padding:.5rem 1.1rem;border-radius:var(--radius-sm);
+      font-size:.82rem;font-weight:600;cursor:pointer;
+      border:none;transition:all .2s;text-decoration:none;
+    }
+    .btn:disabled{opacity:.5;cursor:not-allowed;}
+    .btn-primary{background:var(--mint);color:#fff;}
+    .btn-primary:hover:not(:disabled){background:var(--forest-mid);}
+    .btn-forest{background:var(--forest);color:#fff;}
+    .btn-forest:hover:not(:disabled){background:#0a3325;}
+    .btn-outline{background:transparent;color:var(--forest);border:1.5px solid var(--border);}
+    .btn-outline:hover:not(:disabled){background:var(--pale);border-color:var(--mint);}
+    .btn-warn{background:var(--warn);color:#fff;}
+    .btn-warn:hover:not(:disabled){background:#c9692a;}
+    .btn-danger{background:transparent;color:var(--danger);border:1.5px solid #f5c6c2;}
+    .btn-danger:hover:not(:disabled){background:#fdf2f1;}
+    .btn-sm{padding:.35rem .8rem;font-size:.78rem;}
+    .btn-xs{padding:.25rem .6rem;font-size:.73rem;}
+    .btn-block{width:100%;justify-content:center;}
+    .btn-demo{
+      background:linear-gradient(135deg,var(--sage),var(--mint));
+      color:#fff;animation:pulse-demo 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse-demo{0%,100%{box-shadow:0 0 0 0 rgba(74,158,127,.4);}50%{box-shadow:0 0 0 6px rgba(74,158,127,0);}}
+
+    /* ─── LAYOUT ─────────────────────────────────── */
+    .layout{display:flex;min-height:calc(100vh - 62px);}
+
+    /* ─── SIDEBAR ────────────────────────────────── */
+    .sidebar{
+      width:270px;min-width:270px;
+      background:var(--white);
+      border-right:1.5px solid var(--border);
+      display:flex;flex-direction:column;
+      padding:1.25rem 0;
+      overflow-y:auto;
+    }
+    .sidebar-section{padding:0 1.25rem;margin-bottom:1.5rem;}
+    .sidebar-label{
+      font-size:.68rem;font-weight:700;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--text-lt);
+      margin-bottom:.6rem;padding:0 .25rem;
+    }
+    .nav-item{
+      display:flex;align-items:center;gap:.65rem;
+      padding:.55rem .85rem;border-radius:var(--radius-sm);
+      cursor:pointer;transition:all .18s;
+      font-size:.85rem;font-weight:500;color:var(--text-mid);
+      margin-bottom:.15rem;
+    }
+    .nav-item:hover{background:var(--paler);color:var(--forest);}
+    .nav-item.active{background:var(--pale);color:var(--forest);font-weight:600;}
+    .nav-item .icon{font-size:1rem;width:22px;text-align:center;}
+
+    .tier-box{
+      margin:0 1.25rem 1rem;
+      padding:.85rem;border-radius:var(--radius);
+      background:var(--paler);border:1.5px solid var(--border);
+    }
+    .tier-box.pro{background:linear-gradient(135deg,#fffbf0,#fff8e1);border-color:#f9c74f;}
+    .tier-label{font-size:.75rem;font-weight:700;color:var(--forest);margin-bottom:.3rem;}
+    .tier-count{font-size:.72rem;color:var(--text-lt);margin-bottom:.6rem;}
+    .tier-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:.7rem;}
+    .tier-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--forest-lt));border-radius:10px;transition:width .5s;}
+
+    /* ─── MAIN ───────────────────────────────────── */
+    .main{flex:1;padding:2rem;overflow-y:auto;max-width:calc(100vw - 270px);}
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero{
+      background:linear-gradient(135deg,var(--forest) 0%,var(--forest-mid) 60%,var(--mint) 100%);
+      border-radius:var(--radius);
+      padding:2.5rem 2.5rem 2rem;
+      color:#fff;margin-bottom:2rem;
+      position:relative;overflow:hidden;
+    }
+    .hero::before{
+      content:'🌿';font-size:8rem;
+      position:absolute;right:2rem;top:50%;transform:translateY(-50%);
+      opacity:.12;line-height:1;
+    }
+    .hero h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin-bottom:.5rem;}
+    .hero p{font-size:.95rem;opacity:.85;max-width:540px;line-height:1.6;}
+    .hero-actions{display:flex;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap;}
+
+    /* ─── CARDS ──────────────────────────────────── */
+    .card{
+      background:var(--white);border-radius:var(--radius);
+      border:1.5px solid var(--border);
+      box-shadow:var(--shadow);
+      margin-bottom:1.5rem;
+    }
+    .card-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.1rem 1.4rem;
+      border-bottom:1.5px solid var(--border);
+    }
+    .card-title{font-size:.95rem;font-weight:700;color:var(--forest);display:flex;align-items:center;gap:.5rem;}
+    .card-body{padding:1.4rem;}
+
+    /* ─── STAT GRID ──────────────────────────────── */
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
+    .stat-card{
+      background:var(--white);border-radius:var(--radius);
+      border:1.5px solid var(--border);
+      padding:1.1rem 1.2rem;
+      display:flex;flex-direction:column;gap:.3rem;
+    }
+    .stat-icon{font-size:1.4rem;margin-bottom:.2rem;}
+    .stat-val{font-size:1.7rem;font-weight:700;color:var(--forest);line-height:1;}
+    .stat-lbl{font-size:.75rem;color:var(--text-lt);font-weight:500;}
+    .stat-change{font-size:.72rem;color:var(--mint);font-weight:600;}
+
+    /* ─── VIEWS ──────────────────────────────────── */
+    .view{display:none;}
+    .view.active{display:block;}
+
+    /* ─── PATIENT LIST ───────────────────────────── */
+    .patient-card{
+      display:flex;align-items:center;gap:1rem;
+      padding:1rem 1.2rem;border-radius:var(--radius-sm);
+      border:1.5px solid var(--border);background:var(--white);
+      margin-bottom:.8rem;cursor:pointer;transition:all .2s;
+    }
+    .patient-card:hover{border-color:var(--mint);background:var(--paler);}
+    .patient-card.selected{border-color:var(--forest);background:var(--pale);}
+    .patient-avatar{
+      width:44px;height:44px;border-radius:50%;
+      background:linear-gradient(135deg,var(--mint),var(--forest));
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:700;font-size:1rem;flex-shrink:0;
+    }
+    .patient-info{flex:1;min-width:0;}
+    .patient-name{font-weight:600;font-size:.92rem;color:var(--text);}
+    .patient-dx{font-size:.78rem;color:var(--text-lt);margin-top:.1rem;truncate:ellipsis;}
+    .patient-meta{font-size:.73rem;color:var(--text-lt);margin-top:.2rem;}
+    .patient-actions{display:flex;gap:.4rem;flex-shrink:0;}
+
+    /* ─── SESSION TABLE ──────────────────────────── */
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:.82rem;}
+    thead th{
+      background:var(--paler);color:var(--forest);
+      font-weight:700;font-size:.75rem;letter-spacing:.04em;
+      text-transform:uppercase;padding:.7rem .9rem;
+      border-bottom:2px solid var(--border);text-align:left;
+    }
+    tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+    tbody tr:hover{background:var(--paler);}
+    tbody td{padding:.7rem .9rem;color:var(--text-mid);}
+    .env-pill{
+      display:inline-flex;align-items:center;gap:.3rem;
+      padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600;
+    }
+    .env-forest{background:#e8f5e9;color:#2e7d32;}
+    .env-water{background:#e3f2fd;color:#1565c0;}
+    .env-field{background:#fff9c4;color:#f57f17;}
+    .env-other{background:var(--pale);color:var(--forest);}
+    .ror-good{color:var(--forest-lt);font-weight:700;}
+    .ror-ok{color:var(--warn);font-weight:700;}
+    .ror-low{color:var(--danger);font-weight:700;}
+
+    /* ─── FORM ───────────────────────────────────── */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+    .form-group{display:flex;flex-direction:column;gap:.4rem;}
+    .form-group.full{grid-column:1/-1;}
+    label{font-size:.8rem;font-weight:600;color:var(--forest);}
+    input,select,textarea{
+      padding:.55rem .8rem;border-radius:var(--radius-sm);
+      border:1.5px solid var(--border);font-size:.84rem;
+      font-family:'Inter',sans-serif;color:var(--text);
+      background:var(--white);transition:border-color .2s;
+      width:100%;
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:none;border-color:var(--mint);
+      box-shadow:0 0 0 3px rgba(74,158,127,.12);
+    }
+    textarea{resize:vertical;min-height:70px;}
+    .input-row{display:flex;gap:.5rem;align-items:flex-end;}
+
+    /* ─── RANGE SLIDER ───────────────────────────── */
+    .range-wrap{position:relative;}
+    .range-val{
+      position:absolute;right:0;top:-22px;
+      font-size:.78rem;font-weight:700;color:var(--forest);
+    }
+    input[type=range]{
+      -webkit-appearance:none;height:5px;border-radius:10px;
+      background:linear-gradient(90deg,var(--mint) var(--pct,50%),var(--border) var(--pct,50%));
+      padding:0;border:none;cursor:pointer;
+    }
+    input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;width:18px;height:18px;
+      border-radius:50%;background:var(--forest);
+      box-shadow:0 1px 4px rgba(0,0,0,.2);
+    }
+    input[type=range]:focus{box-shadow:none;border:none;}
+
+    /* ─── STRESS EVENTS ──────────────────────────── */
+    .event-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.7rem;}
+    .event-item{
+      display:flex;align-items:center;gap:.6rem;
+      padding:.5rem .8rem;border-radius:var(--radius-sm);
+      background:var(--paler);border:1px solid var(--border);
+      font-size:.82rem;
+    }
+    .event-time{font-weight:600;color:var(--forest);min-width:50px;}
+    .event-level{
+      width:24px;height:24px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;
+    }
+    .event-note{flex:1;color:var(--text-mid);}
+    .event-del{cursor:pointer;color:var(--text-lt);font-size:.9rem;}
+    .event-del:hover{color:var(--danger);}
+
+    /* ─── TAGS ───────────────────────────────────── */
+    .tag-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem;}
+    .tag{
+      display:inline-flex;align-items:center;gap:.25rem;
+      padding:.22rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600;
+      background:var(--pale);color:var(--forest);border:1px solid var(--border);
+      cursor:pointer;
+    }
+    .tag .del{opacity:.6;font-size:.8rem;}
+    .tag:hover .del{opacity:1;color:var(--danger);}
+
+    /* ─── REPORT CARD ────────────────────────────── */
+    .report-item{
+      border:1.5px solid var(--border);border-radius:var(--radius);
+      padding:1.1rem 1.3rem;margin-bottom:.8rem;
+      background:var(--white);transition:border-color .2s;
+    }
+    .report-item:hover{border-color:var(--mint);}
+    .report-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+    .report-patient{font-weight:700;font-size:.9rem;color:var(--forest);}
+    .report-date{font-size:.75rem;color:var(--text-lt);margin-top:.2rem;}
+    .report-meta{display:flex;gap:1rem;margin-top:.7rem;flex-wrap:wrap;}
+    .report-metric{font-size:.75rem;color:var(--text-mid);}
+    .report-metric strong{color:var(--forest);}
+    .report-preview{
+      font-size:.78rem;color:var(--text-mid);
+      margin-top:.7rem;line-height:1.55;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .report-actions{display:flex;gap:.5rem;flex-shrink:0;}
+
+    /* ─── ANALYTICS ──────────────────────────────── */
+    .chart-wrap{position:relative;height:240px;}
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+
+    /* ─── MODAL ──────────────────────────────────── */
+    .modal-bg{
+      display:none;position:fixed;inset:0;
+      background:rgba(10,30,20,.55);z-index:500;
+      align-items:center;justify-content:center;padding:1rem;
+    }
+    .modal-bg.open{display:flex;}
+    .modal{
+      background:var(--white);border-radius:var(--radius);
+      max-width:600px;width:100%;max-height:90vh;overflow-y:auto;
+      box-shadow:var(--shadow-lg);animation:slideUp .25s ease;
+    }
+    .modal-lg{max-width:780px;}
+    @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    .modal-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.1rem 1.4rem;border-bottom:1.5px solid var(--border);
+      position:sticky;top:0;background:var(--white);z-index:1;
+    }
+    .modal-title{font-size:1rem;font-weight:700;color:var(--forest);}
+    .modal-close{
+      width:30px;height:30px;border-radius:50%;border:none;
+      background:var(--paler);cursor:pointer;font-size:1.1rem;
+      display:flex;align-items:center;justify-content:center;
+      color:var(--text-lt);transition:all .2s;
+    }
+    .modal-close:hover{background:var(--pale);color:var(--forest);}
+    .modal-body{padding:1.4rem;}
+    .modal-footer{
+      padding:1rem 1.4rem;border-top:1.5px solid var(--border);
+      display:flex;justify-content:flex-end;gap:.7rem;
+      position:sticky;bottom:0;background:var(--white);
+    }
+
+    /* ─── REPORT CONTENT ─────────────────────────── */
+    .report-content{
+      font-size:.84rem;line-height:1.7;color:var(--text);
+      max-height:55vh;overflow-y:auto;
+      padding:1rem;background:var(--paler);border-radius:var(--radius-sm);
+      border:1px solid var(--border);
+    }
+    .report-content h3{color:var(--forest);margin:.9rem 0 .3rem;font-size:.9rem;}
+
+    /* ─── TOAST ──────────────────────────────────── */
+    .toast-wrap{
+      position:fixed;bottom:1.5rem;right:1.5rem;z-index:1000;
+      display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;
+    }
+    .toast{
+      padding:.7rem 1.1rem;border-radius:var(--radius-sm);
+      font-size:.83rem;font-weight:500;color:#fff;
+      box-shadow:var(--shadow-lg);animation:toastIn .3s ease;
+      max-width:320px;display:flex;align-items:center;gap:.5rem;
+    }
+    @keyframes toastIn{from{transform:translateX(20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+    .toast-success{background:var(--forest-mid);}
+    .toast-error{background:var(--danger);}
+    .toast-warn{background:var(--warn);}
+    .toast-info{background:var(--mint);}
+
+    /* ─── SPINNER ────────────────────────────────── */
+    .spinner{
+      width:18px;height:18px;border-radius:50%;
+      border:2.5px solid rgba(255,255,255,.3);
+      border-top-color:#fff;animation:spin .7s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ─── UPGRADE BANNER ─────────────────────────── */
+    .upgrade-banner{
+      background:linear-gradient(135deg,var(--warn-lt),#fff9f0);
+      border:1.5px solid #f9c74f;border-radius:var(--radius);
+      padding:1rem 1.3rem;margin-bottom:1.2rem;
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      flex-wrap:wrap;
+    }
+    .upgrade-text{font-size:.85rem;color:#7a4f00;}
+    .upgrade-text strong{color:#5a3800;}
+
+    /* ─── EMPTY STATE ────────────────────────────── */
+    .empty{
+      text-align:center;padding:3rem 1rem;color:var(--text-lt);
+    }
+    .empty-icon{font-size:3rem;margin-bottom:.7rem;}
+    .empty-title{font-weight:700;font-size:1rem;color:var(--text-mid);margin-bottom:.3rem;}
+    .empty-sub{font-size:.82rem;line-height:1.5;}
+
+    /* ─── DIVIDER ────────────────────────────────── */
+    .divider{height:1px;background:var(--border);margin:1rem 0;}
+
+    /* ─── RESP ───────────────────────────────────── */
+    @media(max-width:900px){
+      .sidebar{width:220px;min-width:220px;}
+      .form-grid{grid-template-columns:1fr;}
+      .form-grid-3{grid-template-columns:1fr 1fr;}
+      .analytics-grid{grid-template-columns:1fr;}
+    }
+    @media(max-width:700px){
+      .sidebar{display:none;}
+      .main{max-width:100%;padding:1rem;}
+      .stat-grid{grid-template-columns:1fr 1fr;}
+      .hero{padding:1.5rem;}
+      .hero h1{font-size:1.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║              TOP BAR                 ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">🌿</div>
+    <div>
+      <div class="topbar-title">Eco-Sync AI</div>
+      <div class="topbar-sub">Nature-Based RTM Platform</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <span class="badge badge-count" id="report-badge">
+      📋 {{ report_count }}/{% if tier=='pro' %}∞{% else %}{{ free_limit }}{% endif %} Reports
+    </span>
+    <span class="badge {% if tier=='pro' %}badge-pro{% else %}badge-free{% endif %}" id="tier-badge">
+      {% if tier=='pro' %}⭐ Pro{% else %}🌱 Free{% endif %}
+    </span>
+    {% if tier != 'pro' %}
+    <button class="btn btn-warn btn-sm" onclick="openUpgradeModal()">⚡ Upgrade to Pro</button>
+    {% endif %}
+  </div>
+</header>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║              LAYOUT                  ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <div class="nav-item active" onclick="showView('dashboard')" id="nav-dashboard">
+        <span class="icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('patients')" id="nav-patients">
+        <span class="icon">👤</span> Patients
+      </div>
+      <div class="nav-item" onclick="showView('sessions')" id="nav-sessions">
+        <span class="icon">🌳</span> Sessions
+      </div>
+      <div class="nav-item" onclick="showView('reports')" id="nav-reports">
+        <span class="icon">📋</span> Reports
+      </div>
+      <div class="nav-item" onclick="showView('analytics')" id="nav-analytics">
+        <span class="icon">📊</span> Analytics
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Quick Actions</div>
+      <div class="nav-item" onclick="openPatientModal()">
+        <span class="icon">➕</span> Add Patient
+      </div>
+      <div class="nav-item" onclick="openSessionModal()">
+        <span class="icon">🌿</span> Log Session
+      </div>
+    </div>
+    <div style="flex:1;"></div>
+    <!-- Tier Box -->
+    <div class="tier-box {% if tier=='pro' %}pro{% endif %}" id="sidebar-tier">
+      <div class="tier-label">
+        {% if tier=='pro' %}⭐ Pro Plan — Unlimited{% else %}🌱 Free Plan{% endif %}
+      </div>
+      <div class="tier-count" id="tier-count-text">
+        {% if tier=='pro' %}Unlimited reports & patients{% else %}{{ report_count }}/{{ free_limit }} reports used{% endif %}
+      </div>
+      {% if tier != 'pro' %}
+      <div class="tier-bar">
+        <div class="tier-fill" id="tier-fill" style="width:{{ (report_count / free_limit * 100)|int }}%;"></div>
+      </div>
+      <button class="btn btn-warn btn-block btn-sm" onclick="openUpgradeModal()">⚡ Upgrade — $29/mo</button>
+      {% endif %}
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ════ DASHBOARD VIEW ════ -->
+    <div class="view active" id="view-dashboard">
+      <div class="hero">
+        <h1>Welcome to Eco-Sync AI 🌿</h1>
+        <p>AI-powered nature-based therapy platform with Remote Therapeutic Monitoring. Generate insurance-ready clinical reports, track patient progress
