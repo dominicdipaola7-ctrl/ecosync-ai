@@ -36,9 +36,6 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 FREE_TIER_LIMIT = 3
 
-# ─────────────────────────────────────────────
-# In-memory data store (MVP / demo)
-# ─────────────────────────────────────────────
 def get_store():
     if "patients" not in session:
         session["patients"] = {}
@@ -52,9 +49,6 @@ def get_store():
         session["tier"] = "free"
     return session
 
-# ─────────────────────────────────────────────
-# Routes
-# ─────────────────────────────────────────────
 
 @app.route("/")
 def index():
@@ -75,8 +69,6 @@ def upgrade():
     session.modified = True
     return jsonify({"success": True, "tier": "pro"})
 
-
-# ── Patient CRUD ──────────────────────────────
 
 @app.route("/api/patients", methods=["GET"])
 def list_patients():
@@ -127,13 +119,10 @@ def delete_patient(pid):
     return jsonify({"success": True})
 
 
-# ── Session logging ───────────────────────────
-
 @app.route("/api/sessions", methods=["POST"])
 def create_session_record():
     store = get_store()
 
-    # Check report limit for free tier
     if store["tier"] == "free" and store["report_count"] >= FREE_TIER_LIMIT:
         return jsonify({
             "error": f"Free tier limit of {FREE_TIER_LIMIT} session reports reached. Upgrade to Pro for unlimited reports."
@@ -148,14 +137,13 @@ def create_session_record():
     events = data.get("stress_events", [])
     env_tags = data.get("environment_tags", [])
 
-    # Calculate basic regulation metrics
-    pre_hrv  = float(data.get("pre_session_hrv", 0))
+    pre_hrv = float(data.get("pre_session_hrv", 0))
     post_hrv = float(data.get("post_session_hrv", 0))
-    pre_stress  = float(data.get("pre_session_stress", 0))
+    pre_stress = float(data.get("pre_session_stress", 0))
     post_stress = float(data.get("post_session_stress", 0))
 
-    hrv_delta    = post_hrv - pre_hrv
-    stress_delta = pre_stress - post_stress  # positive = improvement
+    hrv_delta = post_hrv - pre_hrv
+    stress_delta = pre_stress - post_stress
 
     ror = 0.0
     if pre_stress > 0:
@@ -197,8 +185,6 @@ def get_sessions_for_patient(pid):
     return jsonify(patient_sessions)
 
 
-# ── AI Report Generation ──────────────────────
-
 @app.route("/api/reports/generate", methods=["POST"])
 def generate_report():
     store = get_store()
@@ -212,7 +198,7 @@ def generate_report():
         return jsonify({"error": "Anthropic API key not configured. Please set ANTHROPIC_API_KEY in environment."}), 500
 
     data = request.get_json()
-    sid  = data.get("session_id")
+    sid = data.get("session_id")
     sess = store["sessions"].get(sid)
     if not sess:
         return jsonify({"error": "Session not found"}), 404
@@ -221,7 +207,6 @@ def generate_report():
     if not patient:
         return jsonify({"error": "Patient not found"}), 404
 
-    # Build prompt
     prompt = _build_report_prompt(patient, sess)
 
     try:
@@ -259,19 +244,19 @@ def generate_report():
 
 def _build_report_prompt(patient, sess):
     events_text = "\n".join(
-        [f"  - {e.get('time','N/A')} | Stress Level {e.get('level','?')}/10 | Note: {e.get('note','')}"
+        [f"  - {e.get('time', 'N/A')} | Stress Level {e.get('level', '?')}/10 | Note: {e.get('note', '')}"
          for e in sess.get("stress_events", [])]
     ) or "  No discrete stress events recorded."
 
     interventions = ", ".join(sess.get("interventions", [])) or "Standard nature immersion"
-    env_tags      = ", ".join(sess.get("environment_tags", [])) or sess.get("environment", "forest")
+    env_tags = ", ".join(sess.get("environment_tags", [])) or sess.get("environment", "forest")
 
-    return f"""You are a licensed clinical documentation specialist with expertise in nature-based therapy and remote therapeutic monitoring (RTM). Generate a formal Clinical Necessity Report suitable for insurance submission under CPT codes 98975–98981.
+    return f"""You are a licensed clinical documentation specialist with expertise in nature-based therapy and remote therapeutic monitoring (RTM). Generate a formal Clinical Necessity Report suitable for insurance submission under CPT codes 98975-98981.
 
 PATIENT INFORMATION:
 - Name: {patient['name']}
-- Date of Birth: {patient.get('dob','Not provided')}
-- Primary Diagnosis: {patient.get('diagnosis','Not specified')}
+- Date of Birth: {patient.get('dob', 'Not provided')}
+- Primary Diagnosis: {patient.get('diagnosis', 'Not specified')}
 - HRV Baseline: {patient['hrv_baseline']} ms
 - Stress Threshold: {patient['stress_threshold']}/100
 - Resting Heart Rate Baseline: {patient.get('resting_hr', 72)} bpm
@@ -288,7 +273,7 @@ SESSION DATA:
 - Post-Session Stress Score: {sess['post_session_stress']}/100
 - Rate of Regulation (ROR): {sess['rate_of_regulation']}%
 - Interventions Used: {interventions}
-- Clinician Notes: {sess.get('clinician_notes','None provided')}
+- Clinician Notes: {sess.get('clinician_notes', 'None provided')}
 
 STRESS EVENTS DURING SESSION:
 {events_text}
@@ -304,7 +289,7 @@ Detailed clinical summary of session outcomes including HRV analysis, stress reg
 3. ENVIRONMENT-OUTCOME CORRELATION ANALYSIS
 Clinical analysis of how the specific environment ({sess['environment']}) contributed to physiological regulation. Reference peer-supported mechanisms (e.g., attentional restoration theory, stress recovery theory, autonomic nervous system modulation).
 
-4. RTM MONITORING DATA SUMMARY (CPT 98975–98981)
+4. RTM MONITORING DATA SUMMARY (CPT 98975-98981)
 Structured table-ready data summary formatted for RTM billing codes:
 - CPT 98975: Initial setup and patient education
 - CPT 98976/98977: Device supply with daily recordings
@@ -323,8 +308,6 @@ Standard clinician attestation paragraph suitable for insurance submission.
 Use formal clinical language throughout. Be specific and data-driven. Format the report clearly with section headers."""
 
 
-# ── PDF Download ──────────────────────────────
-
 @app.route("/api/reports/<rid>/pdf", methods=["GET"])
 def download_pdf(rid):
     store = get_store()
@@ -335,7 +318,7 @@ def download_pdf(rid):
     patient = store["patients"].get(report["patient_id"], {})
     pdf_buffer = _generate_pdf(report, patient)
 
-    filename = f"EcoSync_Report_{report['patient_name'].replace(' ','_')}_{report['session_date']}.pdf"
+    filename = f"EcoSync_Report_{report['patient_name'].replace(' ', '_')}_{report['session_date']}.pdf"
     return send_file(
         pdf_buffer,
         mimetype="application/pdf",
@@ -349,16 +332,15 @@ def _generate_pdf(report, patient):
     doc = SimpleDocTemplate(
         buffer,
         pagesize=letter,
-        rightMargin=0.75*inch,
-        leftMargin=0.75*inch,
-        topMargin=0.75*inch,
-        bottomMargin=0.75*inch
+        rightMargin=0.75 * inch,
+        leftMargin=0.75 * inch,
+        topMargin=0.75 * inch,
+        bottomMargin=0.75 * inch
     )
 
     styles = getSampleStyleSheet()
-    story  = []
+    story = []
 
-    # Custom styles
     title_style = ParagraphStyle(
         "CustomTitle",
         parent=styles["Title"],
@@ -403,52 +385,48 @@ def _generate_pdf(report, patient):
         spaceAfter=2
     )
 
-    # Header
     story.append(Paragraph("Eco-Sync AI", title_style))
     story.append(Paragraph("Nature-Based Therapy | Remote Therapeutic Monitoring", subtitle_style))
-    story.append(Paragraph("Clinical Necessity Report — Insurance Submission Document", subtitle_style))
-    story.append(Spacer(1, 0.1*inch))
+    story.append(Paragraph("Clinical Necessity Report - Insurance Submission Document", subtitle_style))
+    story.append(Spacer(1, 0.1 * inch))
     story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor("#0f4c35")))
-    story.append(Spacer(1, 0.1*inch))
+    story.append(Spacer(1, 0.1 * inch))
 
-    # Meta info table
     meta_data = [
         ["Patient:", report.get("patient_name", "N/A"), "Report ID:", report["id"]],
-        ["Session Date:", report.get("session_date", "N/A"), "Generated:", report.get("generated_at","N/A")[:10]],
-        ["Environment:", report.get("environment","N/A").upper(), "ROR Score:", f"{report.get('rate_of_regulation',0)}%"],
-        ["HRV Delta:", f"{report.get('hrv_delta',0):+.1f} ms", "CPT Codes:", "98975–98981"],
+        ["Session Date:", report.get("session_date", "N/A"), "Generated:", report.get("generated_at", "N/A")[:10]],
+        ["Environment:", report.get("environment", "N/A").upper(), "ROR Score:", f"{report.get('rate_of_regulation', 0)}%"],
+        ["HRV Delta:", f"{report.get('hrv_delta', 0):+.1f} ms", "CPT Codes:", "98975-98981"],
     ]
-    meta_table = Table(meta_data, colWidths=[1.2*inch, 2.3*inch, 1.2*inch, 2.3*inch])
+    meta_table = Table(meta_data, colWidths=[1.2 * inch, 2.3 * inch, 1.2 * inch, 2.3 * inch])
     meta_table.setStyle(TableStyle([
-        ("FONTSIZE", (0,0), (-1,-1), 8),
-        ("FONTNAME", (0,0), (0,-1), "Helvetica-Bold"),
-        ("FONTNAME", (2,0), (2,-1), "Helvetica-Bold"),
-        ("TEXTCOLOR", (0,0), (0,-1), colors.HexColor("#0f4c35")),
-        ("TEXTCOLOR", (2,0), (2,-1), colors.HexColor("#0f4c35")),
-        ("BACKGROUND", (0,0), (-1,-1), colors.HexColor("#f0f7f4")),
-        ("ROWBACKGROUNDS", (0,0), (-1,-1), [colors.HexColor("#f0f7f4"), colors.HexColor("#e8f4ef")]),
-        ("GRID", (0,0), (-1,-1), 0.5, colors.HexColor("#c8e0d8")),
-        ("PADDING", (0,0), (-1,-1), 5),
+        ("FONTSIZE", (0, 0), (-1, -1), 8),
+        ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+        ("FONTNAME", (2, 0), (2, -1), "Helvetica-Bold"),
+        ("TEXTCOLOR", (0, 0), (0, -1), colors.HexColor("#0f4c35")),
+        ("TEXTCOLOR", (2, 0), (2, -1), colors.HexColor("#0f4c35")),
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f0f7f4")),
+        ("ROWBACKGROUNDS", (0, 0), (-1, -1), [colors.HexColor("#f0f7f4"), colors.HexColor("#e8f4ef")]),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#c8e0d8")),
+        ("PADDING", (0, 0), (-1, -1), 5),
     ]))
     story.append(meta_table)
-    story.append(Spacer(1, 0.15*inch))
+    story.append(Spacer(1, 0.15 * inch))
     story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#c8e0d8")))
 
-    # Parse and render report content
     content = report.get("content", "")
-    lines   = content.split("\n")
+    lines = content.split("\n")
 
     for line in lines:
         line = line.strip()
         if not line:
-            story.append(Spacer(1, 0.05*inch))
+            story.append(Spacer(1, 0.05 * inch))
             continue
 
-        # Detect section headers (numbered or ALL CAPS lines)
         if (line and (
-            (line[0].isdigit() and len(line) > 2 and line[1] in ".):") )
-            or line.isupper()
-            or line.startswith("**") and line.endswith("**")
+            (line[0].isdigit() and len(line) > 2 and line[1] in ".):") or
+            line.isupper() or
+            (line.startswith("**") and line.endswith("**"))
         )):
             clean = line.strip("*").strip("0123456789.): ").strip()
             if len(clean) > 5:
@@ -456,20 +434,18 @@ def _generate_pdf(report, patient):
                 story.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor("#4a9e7f"), spaceAfter=4))
                 continue
 
-        # Bullet points
-        if line.startswith("- ") or line.startswith("• "):
+        if line.startswith("- ") or line.startswith("* "):
             story.append(Paragraph(f"&bull; {line[2:]}", body_style))
         else:
             story.append(Paragraph(line, body_style))
 
-    # Footer
-    story.append(Spacer(1, 0.2*inch))
+    story.append(Spacer(1, 0.2 * inch))
     story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#0f4c35")))
-    story.append(Spacer(1, 0.05*inch))
+    story.append(Spacer(1, 0.05 * inch))
     footer_text = (
-        f"This report was generated by Eco-Sync AI on {report.get('generated_at','')[:10]}. "
+        f"This report was generated by Eco-Sync AI on {report.get('generated_at', '')[:10]}. "
         "This document is intended for clinical and insurance submission use only. "
-        "Eco-Sync AI | Nature-Based Remote Therapeutic Monitoring Platform | CPT 98975–98981"
+        "Eco-Sync AI | Nature-Based Remote Therapeutic Monitoring Platform | CPT 98975-98981"
     )
     story.append(Paragraph(footer_text, meta_style))
 
@@ -477,8 +453,6 @@ def _generate_pdf(report, patient):
     buffer.seek(0)
     return buffer
 
-
-# ── Analytics ────────────────────────────────
 
 @app.route("/api/analytics/<pid>", methods=["GET"])
 def get_analytics(pid):
@@ -499,14 +473,12 @@ def get_analytics(pid):
     return jsonify(chart_data)
 
 
-# ── Demo data loader ──────────────────────────
-
 @app.route("/api/demo/load", methods=["POST"])
 def load_demo():
     store = get_store()
     store["patients"] = {}
     store["sessions"] = {}
-    store["reports"]  = {}
+    store["reports"] = {}
     store["report_count"] = 0
 
     pid = "demo0001"
@@ -523,16 +495,16 @@ def load_demo():
     }
 
     demo_sessions = [
-        {"date":"2024-02-01","env":"forest","pre_hrv":41,"post_hrv":52,"pre_s":78,"post_s":55,"ror":29.5,"notes":"First session. Patient initially anxious.","tags":["pine trees","bird sounds","soft trail"]},
-        {"date":"2024-02-08","env":"water","pre_hrv":44,"post_hrv":58,"pre_s":72,"post_s":46,"ror":36.1,"notes":"Water proximity showed strong regulation response.","tags":["stream","running water","mossy rocks"]},
-        {"date":"2024-02-15","env":"forest","pre_hrv":47,"post_hrv":61,"pre_s":69,"post_s":41,"ror":40.6,"notes":"Patient self-reported feeling 'grounded'. HRV responding well.","tags":["old growth","canopy","wildlife sounds"]},
-        {"date":"2024-02-22","env":"open field","pre_hrv":50,"post_hrv":63,"pre_s":65,"post_s":38,"ror":41.5,"notes":"Open field + movement integration. Best session yet.","tags":["meadow","open sky","gentle breeze"]},
-        {"date":"2024-03-01","env":"water","pre_hrv":52,"post_hrv":67,"pre_s":61,"post_s":34,"ror":44.3,"notes":"Consistent improvement. Patient initiated breathing exercises unprompted.","tags":["lake","reflective surface","quiet"]},
+        {"date": "2024-02-01", "env": "forest", "pre_hrv": 41, "post_hrv": 52, "pre_s": 78, "post_s": 55, "ror": 29.5, "notes": "First session. Patient initially anxious.", "tags": ["pine trees", "bird sounds", "soft trail"]},
+        {"date": "2024-02-08", "env": "water", "pre_hrv": 44, "post_hrv": 58, "pre_s": 72, "post_s": 46, "ror": 36.1, "notes": "Water proximity showed strong regulation response.", "tags": ["stream", "running water", "mossy rocks"]},
+        {"date": "2024-02-15", "env": "forest", "pre_hrv": 47, "post_hrv": 61, "pre_s": 69, "post_s": 41, "ror": 40.6, "notes": "Patient self-reported feeling 'grounded'. HRV responding well.", "tags": ["old growth", "canopy", "wildlife sounds"]},
+        {"date": "2024-02-22", "env": "open field", "pre_hrv": 50, "post_hrv": 63, "pre_s": 65, "post_s": 38, "ror": 41.5, "notes": "Open field + movement integration. Best session yet.", "tags": ["meadow", "open sky", "gentle breeze"]},
+        {"date": "2024-03-01", "env": "water", "pre_hrv": 52, "post_hrv": 67, "pre_s": 61, "post_s": 34, "ror": 44.3, "notes": "Consistent improvement. Patient initiated breathing exercises unprompted.", "tags": ["lake", "reflective surface", "quiet"]},
     ]
 
     for i, s in enumerate(demo_sessions):
-        sid = f"ds{i+1:04d}"
-        hrv_delta    = s["post_hrv"] - s["pre_hrv"]
+        sid = f"ds{i + 1:04d}"
+        hrv_delta = s["post_hrv"] - s["pre_hrv"]
         stress_delta = s["pre_s"] - s["post_s"]
         store["sessions"][sid] = {
             "id": sid,
@@ -549,12 +521,12 @@ def load_demo():
             "stress_delta": round(stress_delta, 1),
             "rate_of_regulation": s["ror"],
             "stress_events": [
-                {"time":"00:10","level":"7","note":"Entry anxiety spike"},
-                {"time":"00:25","level":"4","note":"Regulation beginning"},
-                {"time":"00:50","level":"2","note":"Full regulation achieved"}
+                {"time": "00:10", "level": "7", "note": "Entry anxiety spike"},
+                {"time": "00:25", "level": "4", "note": "Regulation beginning"},
+                {"time": "00:50", "level": "2", "note": "Full regulation achieved"}
             ],
             "clinician_notes": s["notes"],
-            "interventions": ["Mindful walking","Breath awareness","Sensory grounding"],
+            "interventions": ["Mindful walking", "Breath awareness", "Sensory grounding"],
             "created_at": f"{s['date']}T10:00:00",
             "report_generated": False
         }
