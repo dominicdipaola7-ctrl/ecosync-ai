@@ -1,1167 +1,1798 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Eco-Sync AI | Nature-Based RTM Platform</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --forest:    #0f4c35;
-      --forest-mid:#1a6b4a;
-      --forest-lt: #2d9e6b;
-      --mint:      #4a9e7f;
-      --sage:      #7dc4a0;
-      --pale:      #e8f4ef;
-      --paler:     #f0f7f4;
-      --white:     #ffffff;
-      --text:      #1a2e25;
-      --text-mid:  #3a5a4a;
-      --text-lt:   #6b8f7e;
-      --border:    #c8e0d8;
-      --warn:      #e07b39;
-      --warn-lt:   #fdf0e8;
-      --danger:    #c0392b;
-      --shadow:    0 2px 16px rgba(15,76,53,.10);
-      --shadow-lg: 0 8px 40px rgba(15,76,53,.16);
-      --radius:    12px;
-      --radius-sm: 8px;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{
-      font-family:'Inter',sans-serif;
-      background:#f4faf7;
-      color:var(--text);
-      min-height:100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicalCore — Medical Session Management</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ─── SCROLLBAR ─────────────────────────────── */
-    ::-webkit-scrollbar{width:7px;height:7px;}
-    ::-webkit-scrollbar-track{background:var(--paler);}
-    ::-webkit-scrollbar-thumb{background:var(--sage);border-radius:10px;}
+  :root {
+    --bg-primary: #0a0f0d;
+    --bg-secondary: #0e1512;
+    --bg-card: #111a15;
+    --bg-card-hover: #152019;
+    --bg-elevated: #1a2b20;
+    --border: #1e3028;
+    --border-light: #244035;
+    --green-primary: #2d6a4f;
+    --green-bright: #40916c;
+    --green-light: #52b788;
+    --green-accent: #74c69d;
+    --green-glow: #95d5b2;
+    --green-pale: #b7e4c7;
+    --text-primary: #e8f5ee;
+    --text-secondary: #8fb8a0;
+    --text-muted: #4d7a61;
+    --text-dim: #2d5240;
+    --red-alert: #e63946;
+    --red-soft: #c1121f;
+    --amber: #e9c46a;
+    --amber-dim: #7a6030;
+    --shadow-green: 0 0 20px rgba(45, 106, 79, 0.15);
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-elevated: 0 8px 40px rgba(0,0,0,0.6);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 14px;
+    --transition: all 0.2s ease;
+  }
 
-    /* ─── TOPBAR ─────────────────────────────────── */
-    .topbar{
-      background:var(--forest);
-      color:#fff;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 2rem;
-      height:62px;
-      position:sticky;top:0;z-index:100;
-      box-shadow:0 2px 12px rgba(0,0,0,.18);
-    }
-    .topbar-brand{display:flex;align-items:center;gap:.7rem;}
-    .topbar-logo{
-      width:36px;height:36px;
-      background:var(--mint);
-      border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:1.1rem;
-    }
-    .topbar-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;letter-spacing:.02em;}
-    .topbar-sub{font-size:.7rem;opacity:.7;letter-spacing:.05em;text-transform:uppercase;}
-    .topbar-actions{display:flex;align-items:center;gap:.8rem;}
+  html, body {
+    height: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    .badge{
-      display:inline-flex;align-items:center;gap:.3rem;
-      padding:.25rem .75rem;border-radius:20px;
-      font-size:.75rem;font-weight:600;letter-spacing:.03em;
-    }
-    .badge-free{background:rgba(255,255,255,.15);color:#fff;}
-    .badge-pro{background:linear-gradient(135deg,#f9c74f,#f3722c);color:#fff;}
-    .badge-count{background:rgba(255,255,255,.12);color:#fff;font-size:.72rem;}
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--green-primary); border-radius: 3px; }
 
-    .btn{
-      display:inline-flex;align-items:center;gap:.4rem;
-      padding:.5rem 1.1rem;border-radius:var(--radius-sm);
-      font-size:.82rem;font-weight:600;cursor:pointer;
-      border:none;transition:all .2s;text-decoration:none;
-    }
-    .btn:disabled{opacity:.5;cursor:not-allowed;}
-    .btn-primary{background:var(--mint);color:#fff;}
-    .btn-primary:hover:not(:disabled){background:var(--forest-mid);}
-    .btn-forest{background:var(--forest);color:#fff;}
-    .btn-forest:hover:not(:disabled){background:#0a3325;}
-    .btn-outline{background:transparent;color:var(--forest);border:1.5px solid var(--border);}
-    .btn-outline:hover:not(:disabled){background:var(--pale);border-color:var(--mint);}
-    .btn-warn{background:var(--warn);color:#fff;}
-    .btn-warn:hover:not(:disabled){background:#c9692a;}
-    .btn-danger{background:transparent;color:var(--danger);border:1.5px solid #f5c6c2;}
-    .btn-danger:hover:not(:disabled){background:#fdf2f1;}
-    .btn-sm{padding:.35rem .8rem;font-size:.78rem;}
-    .btn-xs{padding:.25rem .6rem;font-size:.73rem;}
-    .btn-block{width:100%;justify-content:center;}
-    .btn-demo{
-      background:linear-gradient(135deg,var(--sage),var(--mint));
-      color:#fff;animation:pulse-demo 2.5s ease-in-out infinite;
-    }
-    @keyframes pulse-demo{0%,100%{box-shadow:0 0 0 0 rgba(74,158,127,.4);}50%{box-shadow:0 0 0 6px rgba(74,158,127,0);}}
+  /* LAYOUT */
+  .app-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
 
-    /* ─── LAYOUT ─────────────────────────────────── */
-    .layout{display:flex;min-height:calc(100vh - 62px);}
+  /* SIDEBAR */
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: relative;
+    z-index: 10;
+  }
 
-    /* ─── SIDEBAR ────────────────────────────────── */
-    .sidebar{
-      width:270px;min-width:270px;
-      background:var(--white);
-      border-right:1.5px solid var(--border);
-      display:flex;flex-direction:column;
-      padding:1.25rem 0;
-      overflow-y:auto;
-    }
-    .sidebar-section{padding:0 1.25rem;margin-bottom:1.5rem;}
-    .sidebar-label{
-      font-size:.68rem;font-weight:700;letter-spacing:.1em;
-      text-transform:uppercase;color:var(--text-lt);
-      margin-bottom:.6rem;padding:0 .25rem;
-    }
-    .nav-item{
-      display:flex;align-items:center;gap:.65rem;
-      padding:.55rem .85rem;border-radius:var(--radius-sm);
-      cursor:pointer;transition:all .18s;
-      font-size:.85rem;font-weight:500;color:var(--text-mid);
-      margin-bottom:.15rem;
-    }
-    .nav-item:hover{background:var(--paler);color:var(--forest);}
-    .nav-item.active{background:var(--pale);color:var(--forest);font-weight:600;}
-    .nav-item .icon{font-size:1rem;width:22px;text-align:center;}
+  .sidebar-logo {
+    padding: 28px 24px 24px;
+    border-bottom: 1px solid var(--border);
+  }
 
-    .tier-box{
-      margin:0 1.25rem 1rem;
-      padding:.85rem;border-radius:var(--radius);
-      background:var(--paler);border:1.5px solid var(--border);
-    }
-    .tier-box.pro{background:linear-gradient(135deg,#fffbf0,#fff8e1);border-color:#f9c74f;}
-    .tier-label{font-size:.75rem;font-weight:700;color:var(--forest);margin-bottom:.3rem;}
-    .tier-count{font-size:.72rem;color:var(--text-lt);margin-bottom:.6rem;}
-    .tier-bar{height:5px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:.7rem;}
-    .tier-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--forest-lt));border-radius:10px;transition:width .5s;}
+  .sidebar-logo .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
 
-    /* ─── MAIN ───────────────────────────────────── */
-    .main{flex:1;padding:2rem;overflow-y:auto;max-width:calc(100vw - 270px);}
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--green-primary), var(--green-bright));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 0 12px rgba(64,145,108,0.4);
+  }
 
-    /* ─── HERO ───────────────────────────────────── */
-    .hero{
-      background:linear-gradient(135deg,var(--forest) 0%,var(--forest-mid) 60%,var(--mint) 100%);
-      border-radius:var(--radius);
-      padding:2.5rem 2.5rem 2rem;
-      color:#fff;margin-bottom:2rem;
-      position:relative;overflow:hidden;
-    }
-    .hero::before{
-      content:'🌿';font-size:8rem;
-      position:absolute;right:2rem;top:50%;transform:translateY(-50%);
-      opacity:.12;line-height:1;
-    }
-    .hero h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin-bottom:.5rem;}
-    .hero p{font-size:.95rem;opacity:.85;max-width:540px;line-height:1.6;}
-    .hero-actions{display:flex;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap;}
+  .logo-text {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+  }
 
-    /* ─── CARDS ──────────────────────────────────── */
-    .card{
-      background:var(--white);border-radius:var(--radius);
-      border:1.5px solid var(--border);
-      box-shadow:var(--shadow);
-      margin-bottom:1.5rem;
-    }
-    .card-header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:1.1rem 1.4rem;
-      border-bottom:1.5px solid var(--border);
-    }
-    .card-title{font-size:.95rem;font-weight:700;color:var(--forest);display:flex;align-items:center;gap:.5rem;}
-    .card-body{padding:1.4rem;}
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-left: 42px;
+  }
 
-    /* ─── STAT GRID ──────────────────────────────── */
-    .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
-    .stat-card{
-      background:var(--white);border-radius:var(--radius);
-      border:1.5px solid var(--border);
-      padding:1.1rem 1.2rem;
-      display:flex;flex-direction:column;gap:.3rem;
-    }
-    .stat-icon{font-size:1.4rem;margin-bottom:.2rem;}
-    .stat-val{font-size:1.7rem;font-weight:700;color:var(--forest);line-height:1;}
-    .stat-lbl{font-size:.75rem;color:var(--text-lt);font-weight:500;}
-    .stat-change{font-size:.72rem;color:var(--mint);font-weight:600;}
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+  }
 
-    /* ─── VIEWS ──────────────────────────────────── */
-    .view{display:none;}
-    .view.active{display:block;}
+  .nav-section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 12px 12px 6px;
+    margin-top: 8px;
+  }
 
-    /* ─── PATIENT LIST ───────────────────────────── */
-    .patient-card{
-      display:flex;align-items:center;gap:1rem;
-      padding:1rem 1.2rem;border-radius:var(--radius-sm);
-      border:1.5px solid var(--border);background:var(--white);
-      margin-bottom:.8rem;cursor:pointer;transition:all .2s;
-    }
-    .patient-card:hover{border-color:var(--mint);background:var(--paler);}
-    .patient-card.selected{border-color:var(--forest);background:var(--pale);}
-    .patient-avatar{
-      width:44px;height:44px;border-radius:50%;
-      background:linear-gradient(135deg,var(--mint),var(--forest));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-weight:700;font-size:1rem;flex-shrink:0;
-    }
-    .patient-info{flex:1;min-width:0;}
-    .patient-name{font-weight:600;font-size:.92rem;color:var(--text);}
-    .patient-dx{font-size:.78rem;color:var(--text-lt);margin-top:.1rem;truncate:ellipsis;}
-    .patient-meta{font-size:.73rem;color:var(--text-lt);margin-top:.2rem;}
-    .patient-actions{display:flex;gap:.4rem;flex-shrink:0;}
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    user-select: none;
+  }
 
-    /* ─── SESSION TABLE ──────────────────────────── */
-    .table-wrap{overflow-x:auto;}
-    table{width:100%;border-collapse:collapse;font-size:.82rem;}
-    thead th{
-      background:var(--paler);color:var(--forest);
-      font-weight:700;font-size:.75rem;letter-spacing:.04em;
-      text-transform:uppercase;padding:.7rem .9rem;
-      border-bottom:2px solid var(--border);text-align:left;
-    }
-    tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
-    tbody tr:hover{background:var(--paler);}
-    tbody td{padding:.7rem .9rem;color:var(--text-mid);}
-    .env-pill{
-      display:inline-flex;align-items:center;gap:.3rem;
-      padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600;
-    }
-    .env-forest{background:#e8f5e9;color:#2e7d32;}
-    .env-water{background:#e3f2fd;color:#1565c0;}
-    .env-field{background:#fff9c4;color:#f57f17;}
-    .env-other{background:var(--pale);color:var(--forest);}
-    .ror-good{color:var(--forest-lt);font-weight:700;}
-    .ror-ok{color:var(--warn);font-weight:700;}
-    .ror-low{color:var(--danger);font-weight:700;}
+  .nav-tab:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+  }
 
-    /* ─── FORM ───────────────────────────────────── */
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
-    .form-group{display:flex;flex-direction:column;gap:.4rem;}
-    .form-group.full{grid-column:1/-1;}
-    label{font-size:.8rem;font-weight:600;color:var(--forest);}
-    input,select,textarea{
-      padding:.55rem .8rem;border-radius:var(--radius-sm);
-      border:1.5px solid var(--border);font-size:.84rem;
-      font-family:'Inter',sans-serif;color:var(--text);
-      background:var(--white);transition:border-color .2s;
-      width:100%;
-    }
-    input:focus,select:focus,textarea:focus{
-      outline:none;border-color:var(--mint);
-      box-shadow:0 0 0 3px rgba(74,158,127,.12);
-    }
-    textarea{resize:vertical;min-height:70px;}
-    .input-row{display:flex;gap:.5rem;align-items:flex-end;}
+  .nav-tab.active {
+    background: linear-gradient(135deg, rgba(45,106,79,0.3), rgba(64,145,108,0.15));
+    color: var(--green-accent);
+    border-color: var(--green-primary);
+    box-shadow: inset 0 0 12px rgba(45,106,79,0.1);
+  }
 
-    /* ─── RANGE SLIDER ───────────────────────────── */
-    .range-wrap{position:relative;}
-    .range-val{
-      position:absolute;right:0;top:-22px;
-      font-size:.78rem;font-weight:700;color:var(--forest);
-    }
-    input[type=range]{
-      -webkit-appearance:none;height:5px;border-radius:10px;
-      background:linear-gradient(90deg,var(--mint) var(--pct,50%),var(--border) var(--pct,50%));
-      padding:0;border:none;cursor:pointer;
-    }
-    input[type=range]::-webkit-slider-thumb{
-      -webkit-appearance:none;width:18px;height:18px;
-      border-radius:50%;background:var(--forest);
-      box-shadow:0 1px 4px rgba(0,0,0,.2);
-    }
-    input[type=range]:focus{box-shadow:none;border:none;}
+  .nav-tab .tab-icon {
+    font-size: 15px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
 
-    /* ─── STRESS EVENTS ──────────────────────────── */
-    .event-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.7rem;}
-    .event-item{
-      display:flex;align-items:center;gap:.6rem;
-      padding:.5rem .8rem;border-radius:var(--radius-sm);
-      background:var(--paler);border:1px solid var(--border);
-      font-size:.82rem;
-    }
-    .event-time{font-weight:600;color:var(--forest);min-width:50px;}
-    .event-level{
-      width:24px;height:24px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;
-    }
-    .event-note{flex:1;color:var(--text-mid);}
-    .event-del{cursor:pointer;color:var(--text-lt);font-size:.9rem;}
-    .event-del:hover{color:var(--danger);}
+  .nav-tab .tab-badge {
+    margin-left: auto;
+    background: var(--green-primary);
+    color: var(--green-pale);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
 
-    /* ─── TAGS ───────────────────────────────────── */
-    .tag-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem;}
-    .tag{
-      display:inline-flex;align-items:center;gap:.25rem;
-      padding:.22rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600;
-      background:var(--pale);color:var(--forest);border:1px solid var(--border);
-      cursor:pointer;
-    }
-    .tag .del{opacity:.6;font-size:.8rem;}
-    .tag:hover .del{opacity:1;color:var(--danger);}
+  .sidebar-footer {
+    padding: 16px 12px;
+    border-top: 1px solid var(--border);
+  }
 
-    /* ─── REPORT CARD ────────────────────────────── */
-    .report-item{
-      border:1.5px solid var(--border);border-radius:var(--radius);
-      padding:1.1rem 1.3rem;margin-bottom:.8rem;
-      background:var(--white);transition:border-color .2s;
-    }
-    .report-item:hover{border-color:var(--mint);}
-    .report-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
-    .report-patient{font-weight:700;font-size:.9rem;color:var(--forest);}
-    .report-date{font-size:.75rem;color:var(--text-lt);margin-top:.2rem;}
-    .report-meta{display:flex;gap:1rem;margin-top:.7rem;flex-wrap:wrap;}
-    .report-metric{font-size:.75rem;color:var(--text-mid);}
-    .report-metric strong{color:var(--forest);}
-    .report-preview{
-      font-size:.78rem;color:var(--text-mid);
-      margin-top:.7rem;line-height:1.55;
-      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
-    }
-    .report-actions{display:flex;gap:.5rem;flex-shrink:0;}
+  .plan-badge {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
 
-    /* ─── ANALYTICS ──────────────────────────────── */
-    .chart-wrap{position:relative;height:240px;}
-    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+  .plan-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
 
-    /* ─── MODAL ──────────────────────────────────── */
-    .modal-bg{
-      display:none;position:fixed;inset:0;
-      background:rgba(10,30,20,.55);z-index:500;
-      align-items:center;justify-content:center;padding:1rem;
-    }
-    .modal-bg.open{display:flex;}
-    .modal{
-      background:var(--white);border-radius:var(--radius);
-      max-width:600px;width:100%;max-height:90vh;overflow-y:auto;
-      box-shadow:var(--shadow-lg);animation:slideUp .25s ease;
-    }
-    .modal-lg{max-width:780px;}
-    @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-    .modal-header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:1.1rem 1.4rem;border-bottom:1.5px solid var(--border);
-      position:sticky;top:0;background:var(--white);z-index:1;
-    }
-    .modal-title{font-size:1rem;font-weight:700;color:var(--forest);}
-    .modal-close{
-      width:30px;height:30px;border-radius:50%;border:none;
-      background:var(--paler);cursor:pointer;font-size:1.1rem;
-      display:flex;align-items:center;justify-content:center;
-      color:var(--text-lt);transition:all .2s;
-    }
-    .modal-close:hover{background:var(--pale);color:var(--forest);}
-    .modal-body{padding:1.4rem;}
-    .modal-footer{
-      padding:1rem 1.4rem;border-top:1.5px solid var(--border);
-      display:flex;justify-content:flex-end;gap:.7rem;
-      position:sticky;bottom:0;background:var(--white);
-    }
+  .plan-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-    /* ─── REPORT CONTENT ─────────────────────────── */
-    .report-content{
-      font-size:.84rem;line-height:1.7;color:var(--text);
-      max-height:55vh;overflow-y:auto;
-      padding:1rem;background:var(--paler);border-radius:var(--radius-sm);
-      border:1px solid var(--border);
-    }
-    .report-content h3{color:var(--forest);margin:.9rem 0 .3rem;font-size:.9rem;}
+  .plan-limit {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
 
-    /* ─── TOAST ──────────────────────────────────── */
-    .toast-wrap{
-      position:fixed;bottom:1.5rem;right:1.5rem;z-index:1000;
-      display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;
-    }
-    .toast{
-      padding:.7rem 1.1rem;border-radius:var(--radius-sm);
-      font-size:.83rem;font-weight:500;color:#fff;
-      box-shadow:var(--shadow-lg);animation:toastIn .3s ease;
-      max-width:320px;display:flex;align-items:center;gap:.5rem;
-    }
-    @keyframes toastIn{from{transform:translateX(20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-    .toast-success{background:var(--forest-mid);}
-    .toast-error{background:var(--danger);}
-    .toast-warn{background:var(--warn);}
-    .toast-info{background:var(--mint);}
+  .upgrade-btn {
+    width: 100%;
+    padding: 9px;
+    background: linear-gradient(135deg, var(--green-primary), var(--green-bright));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+  }
 
-    /* ─── SPINNER ────────────────────────────────── */
-    .spinner{
-      width:18px;height:18px;border-radius:50%;
-      border:2.5px solid rgba(255,255,255,.3);
-      border-top-color:#fff;animation:spin .7s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg);}}
+  .upgrade-btn:hover {
+    background: linear-gradient(135deg, var(--green-bright), var(--green-light));
+    box-shadow: 0 0 16px rgba(64,145,108,0.4);
+    transform: translateY(-1px);
+  }
 
-    /* ─── UPGRADE BANNER ─────────────────────────── */
-    .upgrade-banner{
-      background:linear-gradient(135deg,var(--warn-lt),#fff9f0);
-      border:1.5px solid #f9c74f;border-radius:var(--radius);
-      padding:1rem 1.3rem;margin-bottom:1.2rem;
-      display:flex;align-items:center;justify-content:space-between;gap:1rem;
-      flex-wrap:wrap;
-    }
-    .upgrade-text{font-size:.85rem;color:#7a4f00;}
-    .upgrade-text strong{color:#5a3800;}
+  /* MAIN CONTENT */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
 
-    /* ─── EMPTY STATE ────────────────────────────── */
-    .empty{
-      text-align:center;padding:3rem 1rem;color:var(--text-lt);
-    }
-    .empty-icon{font-size:3rem;margin-bottom:.7rem;}
-    .empty-title{font-weight:700;font-size:1rem;color:var(--text-mid);margin-bottom:.3rem;}
-    .empty-sub{font-size:.82rem;line-height:1.5;}
+  /* TOPBAR */
+  .topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    flex-shrink: 0;
+  }
 
-    /* ─── DIVIDER ────────────────────────────────── */
-    .divider{height:1px;background:var(--border);margin:1rem 0;}
+  .topbar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
 
-    /* ─── RESP ───────────────────────────────────── */
-    @media(max-width:900px){
-      .sidebar{width:220px;min-width:220px;}
-      .form-grid{grid-template-columns:1fr;}
-      .form-grid-3{grid-template-columns:1fr 1fr;}
-      .analytics-grid{grid-template-columns:1fr;}
-    }
-    @media(max-width:700px){
-      .sidebar{display:none;}
-      .main{max-width:100%;padding:1rem;}
-      .stat-grid{grid-template-columns:1fr 1fr;}
-      .hero{padding:1.5rem;}
-      .hero h1{font-size:1.5rem;}
-    }
-  </style>
+  .topbar-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-dot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 5px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green-light);
+    box-shadow: 0 0 6px var(--green-light);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--green-primary), var(--green-bright));
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--green-bright), var(--green-light));
+    box-shadow: 0 0 14px rgba(64,145,108,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--green-primary);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--green-primary);
+    color: var(--green-accent);
+  }
+
+  .btn-danger {
+    background: var(--red-soft);
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background: var(--red-alert);
+    box-shadow: 0 0 14px rgba(198,18,31,0.3);
+  }
+
+  /* CONTENT AREA */
+  .content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px;
+  }
+
+  /* VIEW SECTIONS */
+  .view-section {
+    display: none;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .view-section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* DASHBOARD */
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+
+  .stat-card:hover {
+    border-color: var(--border-light);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--green-primary), var(--green-accent));
+  }
+
+  .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--green-accent);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-change {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .stat-change.up { color: var(--green-light); }
+  .stat-change.down { color: var(--red-alert); }
+
+  .stat-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 22px;
+    opacity: 0.25;
+  }
+
+  /* GRID LAYOUT */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .card-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  /* SESSION TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    font-weight: 700;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+
+  .data-table td {
+    padding: 13px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+
+  .data-table tr:hover td {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+  }
+
+  .patient-name {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .patient-id {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .badge-green {
+    background: rgba(45,106,79,0.25);
+    color: var(--green-accent);
+    border: 1px solid rgba(64,145,108,0.3);
+  }
+
+  .badge-amber {
+    background: rgba(233,196,106,0.15);
+    color: var(--amber);
+    border: 1px solid rgba(233,196,106,0.25);
+  }
+
+  .badge-red {
+    background: rgba(230,57,70,0.15);
+    color: var(--red-alert);
+    border: 1px solid rgba(230,57,70,0.25);
+  }
+
+  .badge-gray {
+    background: rgba(100,120,110,0.2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ACTIVITY FEED */
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .activity-icon.green { background: rgba(45,106,79,0.2); border: 1px solid rgba(64,145,108,0.25); }
+  .activity-icon.amber { background: rgba(233,196,106,0.15); border: 1px solid rgba(233,196,106,0.2); }
+  .activity-icon.red { background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.2); }
+
+  .activity-content { flex: 1; }
+
+  .activity-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .activity-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .activity-time {
+    font-size: 10px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  /* QUICK ACTIONS */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .quick-action-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .quick-action-btn:hover {
+    background: var(--bg-elevated);
+    border-color: var(--green-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-green);
+  }
+
+  .quick-action-icon {
+    font-size: 22px;
+  }
+
+  .quick-action-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* METRIC BAR */
+  .metric-bar-wrap {
+    margin-bottom: 14px;
+  }
+
+  .metric-bar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .metric-bar-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .metric-bar-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green-accent);
+  }
+
+  .metric-bar-track {
+    height: 6px;
+    background: var(--bg-elevated);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .metric-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--green-primary), var(--green-accent));
+    transition: width 0.6s ease;
+  }
+
+  /* FORMS */
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+  }
+
+  .form-label .required { color: var(--red-alert); }
+
+  .form-control {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    transition: var(--transition);
+    outline: none;
+    font-family: inherit;
+  }
+
+  .form-control:focus {
+    border-color: var(--green-primary);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.15);
+    background: var(--bg-card);
+  }
+
+  .form-control::placeholder { color: var(--text-dim); }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234d7a61' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-hint {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 5px;
+  }
+
+  /* ALERT BOXES */
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 18px;
+    font-size: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border-left: 3px solid;
+  }
+
+  .alert-info {
+    background: rgba(45,106,79,0.1);
+    border-color: var(--green-primary);
+    color: var(--green-accent);
+  }
+
+  .alert-warn {
+    background: rgba(233,196,106,0.08);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .alert-error {
+    background: rgba(230,57,70,0.08);
+    border-color: var(--red-alert);
+    color: var(--red-alert);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+    animation: overlayIn 0.2s ease;
+  }
+
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-elevated);
+    animation: modalIn 0.25s cubic-bezier(0.16,1,0.3,1);
+    position: relative;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .modal-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .modal-close {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: var(--transition);
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .modal-close:hover {
+    background: var(--red-soft);
+    border-color: var(--red-alert);
+    color: white;
+  }
+
+  .modal-body {
+    padding: 22px 24px;
+  }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  /* PLAN CARDS */
+  .plan-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+  }
+
+  .plan-card {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    position: relative;
+  }
+
+  .plan-card:hover {
+    border-color: var(--green-primary);
+    background: var(--bg-elevated);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-green);
+  }
+
+  .plan-card.selected {
+    border-color: var(--green-bright);
+    background: rgba(45,106,79,0.15);
+    box-shadow: 0 0 20px rgba(64,145,108,0.2);
+  }
+
+  .plan-card.popular::before {
+    content: 'POPULAR';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-bright);
+    color: white;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  .plan-card-name {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .plan-card-price {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .plan-card-period {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .plan-card-features {
+    list-style: none;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .plan-card-features li {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .plan-card-features li::before {
+    content: '✓';
+    color: var(--green-light);
+    font-weight: 700;
+    font-size: 11px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* PATIENTS VIEW */
+  .search-bar {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px 10px 38px;
+    font-size: 13px;
+    color: var(--text-primary);
+    outline: none;
+    transition: var(--transition);
+    font-family: inherit;
+  }
+
+  .search-input:focus {
+    border-color: var(--green-primary);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+  }
+
+  .search-input::placeholder { color: var(--text-dim); }
+
+  /* VITALS PANEL */
+  .vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .vital-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+    position: relative;
+  }
+
+  .vital-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .vital-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green-accent);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .vital-unit {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  .vital-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .vital-status {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .vital-status.normal { background: var(--green-light); }
+  .vital-status.warn { background: var(--amber); }
+  .vital-status.critical { background: var(--red-alert); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+    border-radius: 1px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -21px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+    background: var(--green-primary);
+  }
+
+  .timeline-dot.active {
+    background: var(--green-light);
+    box-shadow: 0 0 8px var(--green-light);
+  }
+
+  .timeline-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+
+  .timeline-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .timeline-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .timeline-body {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* REPORTS VIEW */
+  .report-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .report-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .report-item:hover {
+    border-color: var(--green-primary);
+    background: var(--bg-card-hover);
+    transform: translateX(3px);
+  }
+
+  .report-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(45,106,79,0.2);
+    border: 1px solid rgba(64,145,108,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .report-info { flex: 1; }
+
+  .report-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .report-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .report-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* SETTINGS */
+  .settings-section {
+    margin-bottom: 28px;
+  }
+
+  .settings-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings-row:last-child { border-bottom: none; }
+
+  .settings-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .settings-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* TOGGLE */
+  .toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: var(--transition);
+  }
+
+  .toggle input:checked + .toggle-slider {
+    background: var(--green-primary);
+    border-color: var(--green-bright);
+  }
+
+  .toggle input:checked + .toggle-slider::before {
+    left: calc(100% - 18px);
+    background: white;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+  }
+
+  .empty-state-icon {
+    font-size: 40px;
+    margin-bottom: 14px;
+    opacity: 0.4;
+  }
+
+  .empty-state-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .empty-state-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 300px;
+    margin: 0 auto 18px;
+    line-height: 1.5;
+  }
+
+  /* SPINNER */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* TOAST */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .toast {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    min-width: 260px;
+    max-width: 340px;
+    box-shadow: var(--shadow-elevated);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toastIn 0.25s ease;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .toast-icon { font-size: 16px; }
+  .toast-text { flex: 1; font-size: 13px; color: var(--text-primary); }
+  .toast-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .toast-close { cursor: pointer; color: var(--text-dim); font-size: 14px; }
+
+  .toast.toast-success { border-left: 3px solid var(--green-light); }
+  .toast.toast-error { border-left: 3px solid var(--red-alert); }
+  .toast.toast-warn { border-left: 3px solid var(--amber); }
+
+  /* DIVIDER WITH LABEL */
+  .divider-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+
+  .divider-label::before,
+  .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* BREAKDOWN ROW */
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .bk-label { color: var(--text-secondary); }
+  .breakdown-row .bk-value { color: var(--text-primary); font-weight: 600; }
+  .breakdown-row.total { font-weight: 700; }
+  .breakdown-row.total .bk-label { color: var(--text-primary); }
+  .breakdown-row.total .bk-value { color: var(--green-accent); font-size: 15px; }
+
+  /* RESPONSIVE TWEAKS */
+  @media (max-width: 1100px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .plan-cards { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { width: 60px; min-width: 60px; }
+    .sidebar-logo, .logo-sub, .nav-section-label, .tab-label, .tab-badge, .plan-badge, .upgrade-btn { display: none; }
+    .nav-tab { justify-content: center; padding: 10px; }
+    .vitals-grid { grid-template-columns: repeat(2,1fr); }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
 </head>
 <body>
 
-<!-- ╔══════════════════════════════════════╗ -->
-<!-- ║              TOP BAR                 ║ -->
-<!-- ╚══════════════════════════════════════╝ -->
-<header class="topbar">
-  <div class="topbar-brand">
-    <div class="topbar-logo">🌿</div>
-    <div>
-      <div class="topbar-title">Eco-Sync AI</div>
-      <div class="topbar-sub">Nature-Based RTM Platform</div>
-    </div>
-  </div>
-  <div class="topbar-actions">
-    <span class="badge badge-count" id="report-badge">
-      📋 {{ report_count }}/{% if tier=='pro' %}∞{% else %}{{ free_limit }}{% endif %} Reports
-    </span>
-    <span class="badge {% if tier=='pro' %}badge-pro{% else %}badge-free{% endif %}" id="tier-badge">
-      {% if tier=='pro' %}⭐ Pro{% else %}🌱 Free{% endif %}
-    </span>
-    {% if tier != 'pro' %}
-    <button class="btn btn-warn btn-sm" onclick="openUpgradeModal()">⚡ Upgrade to Pro</button>
-    {% endif %}
-  </div>
-</header>
-
-<!-- ╔══════════════════════════════════════╗ -->
-<!-- ║              LAYOUT                  ║ -->
-<!-- ╚══════════════════════════════════════╝ -->
-<div class="layout">
-
+<div class="app-shell">
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Navigation</div>
-      <div class="nav-item active" onclick="showView('dashboard')" id="nav-dashboard">
-        <span class="icon">🏠</span> Dashboard
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">🩺</div>
+        <div class="logo-text">ClinicalCore</div>
       </div>
-      <div class="nav-item" onclick="showView('patients')" id="nav-patients">
-        <span class="icon">👤</span> Patients
-      </div>
-      <div class="nav-item" onclick="showView('sessions')" id="nav-sessions">
-        <span class="icon">🌳</span> Sessions
-      </div>
-      <div class="nav-item" onclick="showView('reports')" id="nav-reports">
-        <span class="icon">📋</span> Reports
-      </div>
-      <div class="nav-item" onclick="showView('analytics')" id="nav-analytics">
-        <span class="icon">📊</span> Analytics
-      </div>
+      <div class="logo-sub">Medical Platform</div>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Quick Actions</div>
-      <div class="nav-item" onclick="openPatientModal()">
-        <span class="icon">➕</span> Add Patient
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <div class="nav-tab active" data-view="dashboard" onclick="showView('dashboard')">
+        <span class="tab-icon">⬛</span>
+        <span class="tab-label">Dashboard</span>
       </div>
-      <div class="nav-item" onclick="openSessionModal()">
-        <span class="icon">🌿</span> Log Session
+
+      <div class="nav-tab" data-view="patients" onclick="showView('patients')">
+        <span class="tab-icon">👤</span>
+        <span class="tab-label">Patients</span>
+        <span class="tab-badge">24</span>
       </div>
-    </div>
-    <div style="flex:1;"></div>
-    <!-- Tier Box -->
-    <div class="tier-box {% if tier=='pro' %}pro{% endif %}" id="sidebar-tier">
-      <div class="tier-label">
-        {% if tier=='pro' %}⭐ Pro Plan — Unlimited{% else %}🌱 Free Plan{% endif %}
+
+      <div class="nav-tab" data-view="sessions" onclick="showView('sessions')">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">Sessions</span>
       </div>
-      <div class="tier-count" id="tier-count-text">
-        {% if tier=='pro' %}Unlimited reports & patients{% else %}{{ report_count }}/{{ free_limit }} reports used{% endif %}
+
+      <div class="nav-tab" data-view="reports" onclick="showView('reports')">
+        <span class="tab-icon">📊</span>
+        <span class="tab-label">Reports</span>
+        <span class="tab-badge">3</span>
       </div>
-      {% if tier != 'pro' %}
-      <div class="tier-bar">
-        <div class="tier-fill" id="tier-fill" style="width:{{ (report_count / free_limit * 100)|int }}%;"></div>
+
+      <div class="nav-section-label">Clinical</div>
+
+      <div class="nav-tab" data-view="vitals" onclick="showView('vitals')">
+        <span class="tab-icon">🫀</span>
+        <span class="tab-label">Vitals Monitor</span>
       </div>
-      <button class="btn btn-warn btn-block btn-sm" onclick="openUpgradeModal()">⚡ Upgrade — $29/mo</button>
-      {% endif %}
+
+      <div class="nav-tab" data-view="timeline" onclick="showView('timeline')">
+        <span class="tab-icon">📅</span>
+        <span class="tab-label">Timeline</span>
+      </div>
+
+      <div class="nav-section-label">System</div>
+
+      <div class="nav-tab" data-view="settings" onclick="showView('settings')">
+        <span class="tab-icon">⚙️</span>
+        <span class="tab-label">Settings</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="plan-badge">
+        <div class="plan-label">Current Plan</div>
+        <div class="plan-name">⭐ Starter</div>
+        <div class="plan-limit">12 / 50 sessions</div>
+      </div>
+      <button class="upgrade-btn" onclick="openUpgradeModal()">↑ Upgrade Plan</button>
     </div>
   </aside>
 
   <!-- MAIN -->
-  <main class="main">
-
-    <!-- ════ DASHBOARD VIEW ════ -->
-    <div class="view active" id="view-dashboard">
-      <div class="hero">
-        <h1>Welcome to Eco-Sync AI 🌿</h1>
-        <p>AI-powered nature-based therapy platform with Remote Therapeutic Monitoring. Generate insurance-ready clinical reports, track patient progress, and monitor therapeutic outcomes.</p>
-        <div class="hero-actions">
-          <button class="btn btn-demo" onclick="openSessionModal()">🌿 Log New Session</button>
-          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);" onclick="showView('patients')">👤 View Patients</button>
-          <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);" onclick="showView('reports')">📋 View Reports</button>
-        </div>
+  <div class="main-content">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-subtitle" id="topbar-subtitle">Overview of clinical activity</div>
       </div>
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-icon">👤</div>
-          <div class="stat-val" id="dash-patients">0</div>
-          <div class="stat-lbl">Total Patients</div>
-          <div class="stat-change">Active caseload</div>
+      <div class="topbar-actions">
+        <div class="status-dot">
+          <div class="dot"></div>
+          System Operational
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">🌳</div>
-          <div class="stat-val" id="dash-sessions">0</div>
-          <div class="stat-lbl">Sessions Logged</div>
-          <div class="stat-change">Nature-based therapy</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📋</div>
-          <div class="stat-val" id="dash-reports">0</div>
-          <div class="stat-lbl">Reports Generated</div>
-          <div class="stat-change">Insurance-ready</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">💚</div>
-          <div class="stat-val" id="dash-avg-ror">—</div>
-          <div class="stat-lbl">Avg. RoR Score</div>
-          <div class="stat-change">Rate of Response</div>
-        </div>
+        <button class="btn btn-secondary" onclick="showView('sessions')">📋 View Sessions</button>
+        <button class="btn btn-primary" onclick="openSessionModal()">+ New Session</button>
       </div>
+    </header>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🌿 Recent Activity</div>
-          <button class="btn btn-outline btn-sm" onclick="showView('sessions')">View All</button>
+    <!-- CONTENT -->
+    <main class="content-area">
+
+      <!-- ========================= DASHBOARD ========================= -->
+      <section class="view-section active" id="dashboard">
+        <div class="section-header">
+          <div class="section-title">Good morning, Dr. Reynolds</div>
+          <div class="section-desc">Here's your clinical summary for today — Monday, 2 June 2025</div>
         </div>
-        <div class="card-body" id="dash-activity">
-          <div class="empty">
-            <div class="empty-icon">🌱</div>
-            <div class="empty-title">No activity yet</div>
-            <div class="empty-sub">Log your first nature therapy session to get started.</div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+          <div class="quick-action-btn" onclick="openSessionModal()">
+            <div class="quick-action-icon">📋</div>
+            <div class="quick-action-label">New Session</div>
+          </div>
+          <div class="quick-action-btn" onclick="showView('patients')">
+            <div class="quick-action-icon">👤</div>
+            <div class="quick-action-label">Add Patient</div>
+          </div>
+          <div class="quick-action-btn" onclick="showView('reports')">
+            <div class="quick-action-icon">📊</div>
+            <div class="quick-action-label">Generate Report</div>
+          </div>
+          <div class="quick-action-btn" onclick="showView('vitals')">
+            <div class="quick-action-icon">🫀</div>
+            <div class="quick-action-label">Check Vitals</div>
+          </div>
+          <div class="quick-action-btn" onclick="openUpgradeModal()">
+            <div class="quick-action-icon">⭐</div>
+            <div class="quick-action-label">Upgrade Plan</div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ════ PATIENTS VIEW ════ -->
-    <div class="view" id="view-patients">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">👤 Patient Roster</div>
-          <button class="btn btn-primary btn-sm" onclick="openPatientModal()">➕ Add Patient</button>
-        </div>
-        <div class="card-body" id="patient-list">
-          <div class="empty">
-            <div class="empty-icon">👤</div>
-            <div class="empty-title">No patients yet</div>
-            <div class="empty-sub">Add your first patient to begin tracking their nature therapy progress.</div>
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Patients</div>
+            <div class="stat-value">247</div>
+            <div class="stat-change up">↑ 4 this week</div>
+            <div class="stat-icon">👥</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Sessions Today</div>
+            <div class="stat-value">14</div>
+            <div class="stat-change up">↑ 3 vs yesterday</div>
+            <div class="stat-icon">📋</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Reports Pending</div>
+            <div class="stat-value">3</div>
+            <div class="stat-change down">↓ needs action</div>
+            <div class="stat-icon">📊</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Session Time</div>
+            <div class="stat-value">24<span style="font-size:18px;color:var(--text-muted)">m</span></div>
+            <div class="stat-change">Consistent</div>
+            <div class="stat-icon">⏱️</div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ════ SESSIONS VIEW ════ -->
-    <div class="view" id="view-sessions">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🌳 Nature Therapy Sessions</div>
-          <button class="btn btn-primary btn-sm" onclick="openSessionModal()">🌿 Log Session</button>
-        </div>
-        <div class="card-body" id="session-list">
-          <div class="empty">
-            <div class="empty-icon">🌳</div>
-            <div class="empty-title">No sessions logged</div>
-            <div class="empty-sub">Log your first nature therapy session to start building patient records.</div>
+        <div class="grid-2">
+          <!-- RECENT SESSIONS -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Recent Sessions</div>
+                <div class="card-subtitle">Last 5 clinical encounters</div>
+              </div>
+              <button class="btn btn-ghost" style="font-size:11px;" onclick="showView('sessions')">View All →</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="patient-name">Margaret Wilson</div>
+                    <div class="patient-id">#PT-00312</div>
+                  </td>
+                  <td><span class="badge badge-green">Consultation</span></td>
+                  <td><span class="badge badge-green">Complete</span></td>
+                  <td>Today 09:30</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="patient-name">James Okafor</div>
+                    <div class="patient-id">#PT-00298</div>
+                  </td>
+                  <td><span class="badge badge-amber">Follow-up</span></td>
+                  <td><span class="badge badge-amber">In Progress</span></td>
+                  <td>Today 10:15</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="patient-name">Sarah Chen</div>
+                    <div class="patient-id">#PT-00301</div>
+                  </td>
+                  <td><span class="badge badge-gray">Review</span></td>
+                  <td><span class="badge badge-green">Complete</span></td>
+                  <td>Yesterday</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="patient-name">Robert Tanner</div>
+                    <div class="patient-id">#PT-00287</div>
+                  </td>
+                  <td><span class="badge badge-red">Emergency</span></td>
+                  <td><span class="badge badge-green">Resolved</span></td>
+                  <td>Yesterday</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="patient-name">Elena Vasquez</div>
+                    <div class="patient-id">#PT-00276</div>
+                  </td>
+                  <td><span class="badge badge-green">Consultation</span></td>
+                  <td><span class="badge badge-green">Complete</span></td>
+                  <td>2 days ago</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ════ REPORTS VIEW ════ -->
-    <div class="view" id="view-reports">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📋 Clinical Reports</div>
-          <button class="btn btn-primary btn-sm" onclick="openReportModal()">✨ Generate Report</button>
-        </div>
-        <div class="card-body" id="report-list">
-          <div class="empty">
-            <div class="empty-icon">📋</div>
-            <div class="empty-title">No reports generated</div>
-            <div class="empty-sub">Generate AI-powered clinical reports from your session data.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ════ ANALYTICS VIEW ════ -->
-    <div class="view" id="view-analytics">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📊 Analytics Overview</div>
-        </div>
-        <div class="card-body">
-          <div class="analytics-grid">
-            <div class="card" style="margin-bottom:0;">
+          <!-- ACTIVITY + METRICS -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <!-- METRICS -->
+            <div class="card">
               <div class="card-header">
-                <div class="card-title">📈 Session Outcomes</div>
+                <div>
+                  <div class="card-title">Session Usage</div>
+                  <div class="card-subtitle">Monthly allocation</div>
+                </div>
+                <span class="badge badge-amber">Starter Plan</span>
               </div>
               <div class="card-body">
-                <div class="chart-wrap">
-                  <canvas id="chart-outcomes"></canvas>
+                <div class="metric-bar-wrap">
+                  <div class="metric-bar-header">
+                    <span class="metric-bar-label">Sessions Used</span>
+                    <span class="metric-bar-val">12 / 50</span>
+                  </div>
+                  <div class="metric-bar-track">
+                    <div class="metric-bar-fill" style="width:24%"></div>
+                  </div>
+                </div>
+                <div class="metric-bar-wrap">
+                  <div class="metric-bar-header">
+                    <span class="metric-bar-label">Storage Used</span>
+                    <span class="metric-bar-val">340 MB / 1 GB</span>
+                  </div>
+                  <div class="metric-bar-track">
+                    <div class="metric-bar-fill" style="width:34%"></div>
+                  </div>
+                </div>
+                <div class="metric-bar-wrap">
+                  <div class="metric-bar-header">
+                    <span class="metric-bar-label">Reports Generated</span>
+                    <span class="metric-bar-val">8 / 20</span>
+                  </div>
+                  <div class="metric-bar-track">
+                    <div class="metric-bar-fill" style="width:40%"></div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;text-align:center;">
+                  <button class="btn btn-primary" style="width:100%;" onclick="openUpgradeModal()">↑ Upgrade for Unlimited Access</button>
                 </div>
               </div>
             </div>
-            <div class="card" style="margin-bottom:0;">
+
+            <!-- ACTIVITY FEED -->
+            <div class="card">
               <div class="card-header">
-                <div class="card-title">🌿 Environment Types</div>
+                <div class="card-title">Activity Feed</div>
               </div>
-              <div class="card-body">
-                <div class="chart-wrap">
-                  <canvas id="chart-envs"></canvas>
+              <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <div class="activity-icon green">📋</div>
+                    <div class="activity-content">
+                      <div class="activity-title">Session completed</div>
+                      <div class="activity-meta">Margaret Wilson — Consultation</div>
+                    </div>
+                    <div class="activity-time">9:42 AM</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon amber">📊</div>
+                    <div class="activity-content">
+                      <div class="activity-title">Report generated</div>
+                      <div class="activity-meta">Monthly Summary — June</div>
+                    </div>
+                    <div class="activity-time">8:15 AM</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon green">👤</div>
+                    <div class="activity-content">
+                      <div class="activity-title">New patient registered</div>
+                      <div class="activity-meta">PT-00312 — Self referral</div>
+                    </div>
+                    <div class="activity-time">Yesterday</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon red">⚠️</div>
+                    <div class="activity-content">
+                      <div class="activity-title">Critical value flagged</div>
+                      <div class="activity-meta">Robert Tanner — BP 185/110</div>
+                    </div>
+                    <div class="activity-time">Yesterday</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-  </main>
-</div>
+      <!-- ========================= PATIENTS ========================= -->
+      <section class="view-section" id="patients">
+        <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="section-title">Patient Registry</div>
+            <div class="section-desc">Manage and monitor all registered patients</div>
+          </div>
+          <button class="btn btn-primary" onclick="openSessionModal()">+ New Session</button>
+        </div>
 
-<!-- ╔══════════════════════════════════════╗ -->
-<!-- ║              MODALS                  ║ -->
-<!-- ╚══════════════════════════════════════╝ -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" type="text" placeholder="Search patients by name, ID, or condition...">
+        </div>
 
-<!-- UPGRADE MODAL -->
-<div class="modal-bg" id="modal-upgrade">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">⚡ Upgrade to Pro</div>
-      <button class="modal-close" onclick="closeModal('modal-upgrade')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="text-align:center;padding:1rem 0 1.5rem;">
-        <div style="font-size:3rem;margin-bottom:.5rem;">🌿</div>
-        <h2 style="font-family:'Playfair Display',serif;color:var(--forest);margin-bottom:.5rem;">Eco-Sync Pro</h2>
-        <p style="color:var(--text-lt);font-size:.9rem;">Unlock unlimited reports, patients, and advanced features.</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem;">
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> <strong>Unlimited</strong> clinical report generation</div>
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> <strong>Unlimited</strong> patient profiles</div>
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> PDF export for insurance billing</div>
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Advanced analytics & outcome tracking</div>
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Priority AI report generation</div>
-        <div style="display:flex;align-items:center;gap:.7rem;font-size:.88rem;"><span style="color:var(--mint);font-size:1.1rem;">✓</span> Nature environment benchmarking</div>
-      </div>
-      <div style="text-align:center;margin-bottom:1rem;">
-        <div style="font-size:2rem;font-weight:700;color:var(--forest);">$29<span style="font-size:1rem;font-weight:400;color:var(--text-lt);">/month</span></div>
-        <div style="font-size:.78rem;color:var(--text-lt);">Cancel anytime. No contracts.</div>
-      </div>
-      <button class="btn btn-warn btn-block" id="upgrade-btn" onclick="doUpgrade()">⚡ Upgrade Now — $29/mo</button>
-    </div>
-  </div>
-</div>
-
-<!-- PATIENT MODAL -->
-<div class="modal-bg" id="modal-patient">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">➕ Add Patient</div>
-      <button class="modal-close" onclick="closeModal('modal-patient')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>First Name *</label>
-          <input type="text" id="p-fname" placeholder="Jane"/>
-        </div>
-        <div class="form-group">
-          <label>Last Name *</label>
-          <input type="text" id="p-lname" placeholder="Smith"/>
-        </div>
-        <div class="form-group">
-          <label>Date of Birth</label>
-          <input type="date" id="p-dob"/>
-        </div>
-        <div class="form-group">
-          <label>Primary Diagnosis</label>
-          <input type="text" id="p-dx" placeholder="e.g. Anxiety Disorder"/>
-        </div>
-        <div class="form-group full">
-          <label>Treatment Goals</label>
-          <textarea id="p-goals" placeholder="Describe the patient's treatment goals..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Insurance ID</label>
-          <input type="text" id="p-ins" placeholder="INS-12345"/>
-        </div>
-        <div class="form-group">
-          <label>Preferred Environment</label>
-          <select id="p-env">
-            <option value="forest">🌲 Forest</option>
-            <option value="water">💧 Water / Coastal</option>
-            <option value="field">🌾 Field / Meadow</option>
-            <option value="garden">🌸 Garden</option>
-            <option value="mixed">🌿 Mixed / Other</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-patient')">Cancel</button>
-      <button class="btn btn-primary" onclick="savePatient()">💾 Save Patient</button>
-    </div>
-  </div>
-</div>
-
-<!-- SESSION MODAL -->
-<div class="modal-bg" id="modal-session">
-  <div class="modal modal-lg">
-    <div class="modal-header">
-      <div class="modal-title">🌿 Log Nature Therapy Session</div>
-      <button class="modal-close" onclick="closeModal('modal-session')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Patient *</label>
-          <select id="s-patient"></select>
-        </div>
-        <div class="form-group">
-          <label>Session Date *</label>
-          <input type="date" id="s-date"/>
-        </div>
-        <div class="form-group">
-          <label>Duration (minutes)</label>
-          <input type="number" id="s-duration" value="60" min="5" max="480"/>
-        </div>
-        <div class="form-group">
-          <label>Environment</label>
-          <select id="s-env">
-            <option value="forest">🌲 Forest</option>
-            <option value="water">💧 Water / Coastal</option>
-            <option value="field">🌾 Field / Meadow</option>
-            <option value="garden">🌸 Garden</option>
-            <option value="mixed">🌿 Mixed / Other</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label>Pre-Session Stress Level: <span id="pre-stress-val">5</span>/10</label>
-          <div class="range-wrap">
-            <input type="range" id="s-pre-stress" min="1" max="10" value="5" oninput="updateRange(this,'pre-stress-val')"/>
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" style="font-size:11px;">All Patients</button>
+          <button class="btn btn-ghost" style="font-size:11px;">Active</button>
+          <button class="btn btn-ghost" style="font-size:11px;">Inactive</button>
+          <button class="btn btn-ghost" style="font-size:11px;">High Risk</button>
+          <div style="margin-left:auto;">
+            <span style="font-size:11px;color:var(--text-muted);">Showing 24 of 247 patients</span>
           </div>
         </div>
-        <div class="form-group full">
-          <label>Post-Session Stress Level: <span id="post-stress-val">3</span>/10</label>
-          <div class="range-wrap">
-            <input type="range" id="s-post-stress" min="1" max="10" value="3" oninput="updateRange(this,'post-stress-val')"/>
-          </div>
-        </div>
-        <div class="form-group full">
-          <label>Clinical Observations</label>
-          <textarea id="s-observations" rows="3" placeholder="Describe patient engagement, behavioral observations, therapeutic progress..."></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Interventions Used</label>
-          <textarea id="s-interventions" placeholder="e.g. Mindful walking, sensory grounding, nature journaling..."></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Session Goals Addressed</label>
-          <textarea id="s-goals-addressed" placeholder="Which treatment goals were addressed in this session..."></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-session')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveSession()">💾 Log Session</button>
-    </div>
-  </div>
-</div>
 
-<!-- REPORT GENERATE MODAL -->
-<div class="modal-bg" id="modal-report-gen">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">✨ Generate Clinical Report</div>
-      <button class="modal-close" onclick="closeModal('modal-report-gen')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>Patient *</label>
-          <select id="r-patient"></select>
-        </div>
-        <div class="form-group">
-          <label>Report Period Start</label>
-          <input type="date" id="r-start"/>
-        </div>
-        <div class="form-group">
-          <label>Report Period End</label>
-          <input type="date" id="r-end"/>
-        </div>
-        <div class="form-group full">
-          <label>Report Type</label>
-          <select id="r-type">
-            <option value="progress">Progress Note</option>
-            <option value="monthly">Monthly Summary</option>
-            <option value="insurance">Insurance Authorization</option>
-            <option value="discharge">Discharge Summary</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label>Additional Clinical Context</label>
-          <textarea id="r-context" placeholder="Any additional context for the AI to include..."></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-report-gen')">Cancel</button>
-      <button class="btn btn-primary" id="gen-report-btn" onclick="generateReport()">✨ Generate Report</button>
-    </div>
-  </div>
-</div>
-
-<!-- REPORT VIEW MODAL -->
-<div class="modal-bg" id="modal-report-view">
-  <div class="modal modal-lg">
-    <div class="modal-header">
-      <div class="modal-title">📋 Clinical Report</div>
-      <button class="modal-close" onclick="closeModal('modal-report-view')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="report-content" id="report-view-content"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-report-view')">Close</button>
-      <button class="btn btn-primary" id="report-pdf-btn">📄 Download PDF</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST CONTAINER -->
-<div class="toast-wrap" id="toast-wrap"></div>
-
-<script>
-// ═══════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════
-const STATE = {
-  patients: {},
-  sessions: {},
-  reports: {},
-  report_count: {{ report_count }},
-  tier: '{{ tier }}',
-  free_limit: {{ free_limit }}
-};
-
-// Seed from Jinja
-{% for pid, p in patients.items() %}
-STATE.patients['{{ pid }}'] = {{ p | tojson }};
-{% endfor %}
-{% for sid, s in sessions.items() %}
-STATE.sessions['{{ sid }}'] = {{ s | tojson }};
-{% endfor %}
-{% for rid, r in reports.items() %}
-STATE.reports['{{ rid }}'] = {{ r | tojson }};
-{% endfor %}
-
-// ═══════════════════════════════════════════════════════
-//  VIEWS
-// ═══════════════════════════════════════════════════════
-function showView(name) {
-  // Hide all views
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // Remove active from all nav items
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-  // Show target view
-  const view = document.getElementById('view-' + name);
-  if (view) view.classList.add('active');
-
-  // Activate nav item
-  const nav = document.getElementById('nav-' + name);
-  if (nav) nav.classList.add('active');
-
-  // Refresh content
-  if (name === 'dashboard') renderDashboard();
-  if (name === 'patients') renderPatients();
-  if (name === 'sessions') renderSessions();
-  if (name === 'reports') renderReports();
-  if (name === 'analytics') renderAnalytics();
-}
-
-// ═══════════════════════════════════════════════════════
-//  MODALS
-// ═══════════════════════════════════════════════════════
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-function openUpgradeModal() {
-  openModal('modal-upgrade');
-}
-
-function openPatientModal() {
-  // Clear form
-  ['p-fname','p-lname','p-dob','p-dx','p-goals','p-ins'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  openModal('modal-patient');
-}
-
-function openSessionModal() {
-  // Populate patient dropdown
-  const sel = document.getElementById('s-patient');
-  sel.innerHTML = '';
-  const pids = Object.keys(STATE.patients);
-  if (pids.length === 0) {
-    sel.innerHTML = '<option value="">— No patients yet —</option>';
-  } else {
-    pids.forEach(pid => {
-      const p = STATE.patients[pid];
-      const opt = document.createElement('option');
-      opt.value = pid;
-      opt.textContent = p.first_name + ' ' + p.last_name;
-      sel.appendChild(opt);
-    });
-  }
-  // Set default date to today
-  document.getElementById('s-date').value = new Date().toISOString().split('T')[0];
-  openModal('modal-session');
-}
-
-function openReportModal() {
-  // Populate patient dropdown
-  const sel = document.getElementById('r-patient');
-  sel.innerHTML = '';
-  const pids = Object.keys(STATE.patients);
-  if (pids.length === 0) {
-    sel.innerHTML = '<option value="">— No patients yet —</option>';
-  } else {
-    pids.forEach(pid => {
-      const p = STATE.patients[pid];
-      const opt = document.createElement('option');
-      opt.value = pid;
-      opt.textContent = p.first_name + ' ' + p.last_name;
-      sel.appendChild(opt);
-    });
-  }
-  // Default dates
-  const today = new Date();
-  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  document.getElementById('r-start').value = firstOfMonth.toISOString().split('T')[0];
-  document.getElementById('r-end').value = today.toISOString().split('T')[0];
-  openModal('modal-report-gen');
-}
-
-// Close modals on background click
-document.querySelectorAll('.modal-bg').forEach(bg => {
-  bg.addEventListener('click', function(e) {
-    if (e.target === this) this.classList.remove('open');
-  });
-});
-
-// ═══════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════
-function toast(msg, type='success') {
-  const wrap = document.getElementById('toast-wrap');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  t.innerHTML = msg;
-  wrap.appendChild(t);
-  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3000);
-}
-
-// ═══════════════════════════════════════════════════════
-//  RANGE SLIDER
-// ═══════════════════════════════════════════════════════
-function updateRange(input, labelId) {
-  document.getElementById(labelId).textContent = input.value;
-  const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
-  input.style.setProperty('--pct', pct + '%');
-}
-
-// Init range sliders on page load
-document.querySelectorAll('input[type=range]').forEach(r => updateRange(r, r.id.replace('s-','').replace('-stress','') + '-stress-val'));
-
-// ═══════════════════════════════════════════════════════
-//  UPGRADE
-// ═══════════════════════════════════════════════════════
-function doUpgrade() {
-  const btn = document.getElementById('upgrade-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div> Processing...';
-
-  fetch('/upgrade', { method: 'POST' })
-    .then(r => r.json())
-    .then(data => {
-      STATE.tier = 'pro';
-      closeModal('modal-upgrade');
-      toast('🎉 Upgraded to Pro! Enjoy unlimited reports.', 'success');
-      // Update UI
-      document.getElementById('tier-badge').className = 'badge badge-pro';
-      document.getElementById('tier-badge').textContent = '⭐ Pro';
-      btn.disabled = false;
-      btn.innerHTML = '⚡ Upgrade Now — $29/mo';
-    })
-    .catch(() => {
-      toast('Upgrade failed. Please try again.', 'error');
-      btn.disabled = false;
-      btn.innerHTML = '⚡ Upgrade Now — $29/mo';
-    });
-}
-
-// ═══════════════════════════════════════════════════════
-//  PATIENTS
-// ═══════════════════════════════════════════════════════
-function savePatient() {
-  const fname = document.getElementById('p-fname').value.trim();
-  const lname = document.getElementById('p-lname').value.trim();
-  if (!fname || !lname) { toast('First and last name are required.', 'error'); return; }
-
-  const data = {
-    first_name: fname,
-    last_name: lname,
-    dob: document.getElementById('p-dob').value,
-    diagnosis: document.getElementById('p-dx').value.trim(),
-    goals: document.getElementById('p-goals').value.trim(),
-    insurance_id: document.getElementById('p-ins').value.trim(),
-    preferred_env: document.getElementById('p-env').value
-  };
-
-  fetch('/api/patients', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.error) { toast(res.error, 'error'); return; }
-    STATE.patients[res.id] = res.patient;
-    closeModal('modal-patient');
-    toast('✅ Patient added successfully!', 'success');
-    renderPatients();
-    renderDashboard();
-  })
-  .catch(() => toast('Failed to save patient.', 'error'));
-}
-
-function renderPatients() {
-  const container = document.getElementById('patient-list');
-  const pids = Object.keys(STATE.patients);
-  if (pids.length === 0) {
-    container.innerHTML = `<div class="empty"><div class="empty-icon">👤</div><div class="empty-title">No patients yet</div><div class="empty-sub">Add your first patient to begin tracking their nature therapy progress.</div></div>`;
-    return;
-  }
-  container.innerHTML = pids.map(pid => {
-    const p = STATE.patients[pid];
-    const initials = (p.first_name[0] || '') + (p.last_name[0] || '');
-    const sessionCount = Object.values(STATE.sessions).filter(s => s.patient_id === pid).length;
-    return `
-      <div class="patient-card">
-        <div class="patient-avatar">${initials.toUpperCase()}</div>
-        <div class="patient-info">
-          <div class="patient-name">${p.first_name} ${p.last_name}</div>
-          <div class="patient-dx">${p.diagnosis || 'No diagnosis listed'}</div>
-          <div class="patient-meta">${sessionCount} session(s) • ${p.preferred_env || 'mixed'} environment</div>
-        </div>
-        <div class="patient-actions">
-          <button class="btn btn-outline btn-xs" onclick="viewPatientSessions('${pid}')">🌳 Sessions</button>
-          <button class="btn btn-primary btn-xs" onclick="generateReportForPatient('${pid}')">📋 Report</button>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-function viewPatientSessions(pid) {
-  showView('sessions');
-}
-
-function generateReportForPatient(pid) {
-  openReportModal();
-  setTimeout(() => {
-    const sel = document.getElementById('r-patient');
-    if (sel) sel.value = pid;
-  }, 50);
-}
-
-// ═══════════════════════════════════════════════════════
-//  SESSIONS
-// ═══════════════════════════════════════════════════════
-function saveSession() {
-  const patientId = document.getElementById('s-patient').value;
-  const sessionDate = document.getElementById('s-date').value;
-  if (!patientId) { toast('Please select a patient.', 'error'); return; }
-  if (!sessionDate) { toast('Please select a session date.', 'error'); return; }
-
-  const preStress = parseInt(document.getElementById('s-pre-stress').value);
-  const postStress = parseInt(document.getElementById('s-post-stress').value);
-  const ror = Math.round(((preStress - postStress) / preStress) * 100);
-
-  const data = {
-    patient_id: patientId,
-    date: sessionDate,
-    duration: parseInt(document.getElementById('s-duration').value) || 60,
-    environment: document.getElementById('s-env').value,
-    pre_stress: preStress,
-    post_stress: postStress,
-    ror: ror,
-    observations: document.getElementById('s-observations').value.trim(),
-    interventions: document.getElementById('s-interventions').value.trim(),
-    goals_addressed: document.getElementById('s-goals-addressed').value.trim()
-  };
-
-  fetch('/api/sessions', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.error) { toast(res.error, 'error'); return; }
-    STATE.sessions[res.id] = res.session;
-    closeModal('modal-session');
-    toast('✅ Session logged successfully!', 'success');
-    renderSessions();
-    renderDashboard();
-  })
-  .catch(() => toast('Failed to save session.', 'error'));
-}
-
-function renderSessions() {
-  const container = document.getElementById('session-list');
-  const sids = Object.keys(STATE.sessions);
-  if (sids.length === 0) {
-    container.innerHTML = `<div class="empty"><div class="empty-icon">🌳</div><div class="empty-title">No sessions logged</div><div class="empty-sub">Log
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>DOB / Age</th>
+                <th>Condition</th>
+                <th>
