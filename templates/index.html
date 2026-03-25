@@ -3,135 +3,169 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Eco-Sync AI — Nature-Based RTM Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<title>Eco-Sync AI — Where Nature Becomes Medicine</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
+:root {
+  --parchment: #F5F2ED;
+  --cream: #EDE8DF;
+  --sage-deep: #3A5244;
+  --sage-mid: #5E7A68;
+  --sage-light: #8FAF9A;
+  --mist: #B8CBBF;
+  --stone: #8C8679;
+  --text: #262420;
+  --text-mid: #5A5550;
+  --text-light: #8A857E;
+  --border: rgba(90,85,80,.12);
+  --shadow-sm: 0 2px 20px rgba(58,82,68,.06);
+  --shadow: 0 8px 48px rgba(58,82,68,.10);
+  --shadow-lg: 0 20px 80px rgba(58,82,68,.14);
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0a1f14;color:#e8f4ef;min-height:100vh}
-a{color:inherit;text-decoration:none}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--parchment);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--mist);border-radius:10px}
 
-/* NAV */
-nav{background:#0d2b1a;border-bottom:1px solid #1a4a2a;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.nav-brand{display:flex;align-items:center;gap:.6rem}
-.nav-logo{width:32px;height:32px;background:linear-gradient(135deg,#2d9e6b,#1a6b4a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
-.nav-title{font-size:1.1rem;font-weight:700;color:#7dc4a0}
-.nav-subtitle{font-size:.65rem;color:#4a7a5a;text-transform:uppercase;letter-spacing:.08em}
-.nav-tabs{display:flex;gap:.25rem}
-.nav-tab{padding:.5rem 1rem;border-radius:8px;font-size:.82rem;font-weight:500;cursor:pointer;color:#7dc4a0;border:none;background:none;transition:all .2s}
-.nav-tab:hover{background:#1a3a2a}
-.nav-tab.active{background:#1a4a2a;color:#4ad490}
-.nav-right{display:flex;align-items:center;gap:.75rem}
-.badge-plan{padding:.3rem .8rem;border-radius:20px;font-size:.72rem;font-weight:600;background:#1a3a2a;color:#7dc4a0;border:1px solid #2a5a3a}
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-.btn-primary{background:linear-gradient(135deg,#2d9e6b,#1a6b4a);color:#fff}
-.btn-primary:hover{background:linear-gradient(135deg,#3ab87e,#2d9e6b)}
-.btn-ghost{background:none;color:#7dc4a0;border:1px solid #2a5a3a}
-.btn-ghost:hover{background:#1a3a2a}
-.btn-sm{padding:.35rem .8rem;font-size:.78rem}
-.btn-danger{background:#c0392b;color:#fff}
-
-/* LAYOUT */
-main{max-width:1200px;margin:0 auto;padding:2rem}
-.view-section{display:none}
-.view-section.active{display:block}
-
-/* CARDS */
-.card{background:#0d2b1a;border:1px solid #1a4a2a;border-radius:12px;padding:1.5rem}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
-.card-title{font-size:1rem;font-weight:600;color:#7dc4a0}
-
-/* GRID */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-
-/* METRICS */
-.metric{background:#0d2b1a;border:1px solid #1a4a2a;border-radius:12px;padding:1.25rem;text-align:center}
-.metric-value{font-size:2rem;font-weight:700;color:#4ad490;line-height:1}
-.metric-label{font-size:.75rem;color:#4a7a5a;margin-top:.35rem;text-transform:uppercase;letter-spacing:.06em}
-.metric-sub{font-size:.8rem;color:#7dc4a0;margin-top:.2rem}
-
-/* PAGE HEADER */
-.page-header{margin-bottom:1.75rem}
-.page-header h1{font-size:1.5rem;font-weight:700;color:#e8f4ef}
-.page-header p{font-size:.88rem;color:#4a7a5a;margin-top:.25rem}
-
-/* TABLE */
-table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:.75rem;font-weight:600;color:#4a7a5a;text-transform:uppercase;letter-spacing:.06em;padding:.6rem 1rem;border-bottom:1px solid #1a4a2a}
-td{padding:.85rem 1rem;border-bottom:1px solid #122a1a;font-size:.85rem;color:#c8e0d8}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#0f2a1a}
-
-/* STATUS */
-.status{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .7rem;border-radius:20px;font-size:.72rem;font-weight:600}
-.status-active{background:#0f3a1f;color:#4ad490;border:1px solid #1a5a2a}
-.status-inactive{background:#2a1a0a;color:#e07b39;border:1px solid #4a2a0a}
-.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
-
-/* FORM */
-.form-group{margin-bottom:1rem}
-label{display:block;font-size:.8rem;font-weight:600;color:#7dc4a0;margin-bottom:.4rem}
-input,select,textarea{width:100%;padding:.65rem .9rem;background:#0a1f14;border:1px solid #1a4a2a;border-radius:8px;color:#e8f4ef;font-size:.88rem;font-family:inherit;transition:border .2s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#2d9e6b}
-textarea{resize:vertical;min-height:80px}
-select option{background:#0d2b1a}
-
-/* ALERT */
-.alert{padding:.85rem 1rem;border-radius:8px;font-size:.85rem;margin-bottom:1rem}
-.alert-info{background:#0a2a3a;border:1px solid #1a4a6a;color:#7dc0e0}
-.alert-success{background:#0a2a1a;border:1px solid #1a5a2a;color:#4ad490}
-.alert-warn{background:#2a1a0a;border:1px solid #4a3a0a;color:#e0b44a}
-
-/* MODAL */
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:#0d2b1a;border:1px solid #1a4a2a;border-radius:16px;padding:2rem;max-width:480px;width:90%}
-.modal h2{font-size:1.2rem;font-weight:700;color:#7dc4a0;margin-bottom:1rem}
-.modal-footer{display:flex;gap:.75rem;margin-top:1.25rem}
-
-/* REPORT */
-.report-section{margin-bottom:1.25rem}
-.report-section h3{font-size:.9rem;font-weight:600;color:#7dc4a0;margin-bottom:.5rem;padding-bottom:.35rem;border-bottom:1px solid #1a4a2a}
-.report-section p{font-size:.85rem;color:#c8e0d8;line-height:1.6}
-.report-tag{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600;margin:.15rem;background:#1a3a2a;color:#7dc4a0;border:1px solid #2a5a3a}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(245,242,237,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:.75rem}
+.nav-mark{width:36px;height:36px;background:var(--sage-deep);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-name{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--sage-deep)}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:.82rem;font-weight:500;color:var(--text-mid);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--sage-deep)}
+.nav-right{display:flex;gap:.75rem;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.3rem;border-radius:100px;font-size:.82rem;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;border:none;transition:all .25s;text-decoration:none;letter-spacing:.02em}
+.btn-primary{background:var(--sage-deep);color:#fff}
+.btn-primary:hover{background:var(--sage-mid);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--sage-deep);border:1.5px solid rgba(58,82,68,.3)}
+.btn-outline:hover{background:rgba(58,82,68,.06)}
+.btn-lg{padding:.9rem 2.2rem;font-size:.92rem}
+.btn-white{background:#fff;color:var(--sage-deep);font-weight:600}
+.btn-white:hover{background:var(--cream);transform:translateY(-1px)}
+.btn-ghost-white{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2)}
+.btn-ghost-white:hover{background:rgba(255,255,255,.18)}
+.btn-sm{padding:.35rem .8rem;font-size:.75rem}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,#0d2b1a,#0a1f14);border:1px solid #1a4a2a;border-radius:16px;padding:3rem 2rem;text-align:center;margin-bottom:2rem}
-.hero h1{font-size:2.2rem;font-weight:700;color:#4ad490;margin-bottom:.75rem}
-.hero p{font-size:1rem;color:#7dc4a0;max-width:560px;margin:0 auto 1.5rem}
-.hero-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 5rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(143,175,154,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 70%,rgba(184,203,191,.14) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 20%,rgba(90,122,104,.08) 0%,transparent 60%)}
+.hero-content{position:relative;z-index:1;max-width:760px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-mid);margin-bottom:1.75rem;padding:.4rem 1rem;background:rgba(94,122,104,.1);border-radius:100px;border:1px solid rgba(94,122,104,.2);animation:fadeUp .8s ease both}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,6vw,5.2rem);line-height:1.1;color:var(--text);margin-bottom:1.5rem;animation:fadeUp .8s .1s ease both}
+.hero-title em{font-style:italic;color:var(--sage-deep)}
+.hero-sub{font-size:clamp(.95rem,2vw,1.1rem);line-height:1.75;color:var(--text-mid);max-width:540px;margin:0 auto 2.5rem;font-weight:300;animation:fadeUp .8s .2s ease both}
+.hero-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .3s ease both}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);animation:fadeUp .8s .6s ease both}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--mist),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-/* EMPTY STATE */
-.empty{text-align:center;padding:3rem;color:#4a7a5a}
-.empty-icon{font-size:3rem;margin-bottom:.75rem}
-.empty p{font-size:.9rem;margin-bottom:1rem}
+/* SECTIONS */
+.section-intro{padding:8rem 3rem;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.intro-label{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-mid);margin-bottom:1rem}
+.intro-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1.2;color:var(--text);margin-bottom:1.25rem}
+.intro-text{font-size:.92rem;line-height:1.85;color:var(--text-mid);font-weight:300;margin-bottom:1rem}
+.visual-card{background:#fff;border-radius:20px;padding:2rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.visual-metric-label{font-size:.72rem;color:var(--text-light);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.visual-bar-track{height:6px;background:var(--cream);border-radius:10px;overflow:hidden}
+.visual-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--sage-deep),var(--sage-light))}
+.visual-stat{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-mid);margin-top:.3rem}
+.vbadge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:100px;font-size:.7rem;font-weight:500}
+.vbadge-g{background:rgba(58,82,68,.08);color:var(--sage-deep)}
+.vbadge-a{background:rgba(180,130,60,.08);color:#8a6020}
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:700px;margin:0 auto}
-.pricing-card{background:#0d2b1a;border:1px solid #1a4a2a;border-radius:16px;padding:2rem;text-align:center}
-.pricing-card.featured{border-color:#2d9e6b;position:relative}
-.pricing-card.featured::before{content:'RECOMMENDED';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#2d9e6b;color:#fff;font-size:.65rem;font-weight:700;padding:.2rem .8rem;border-radius:20px;letter-spacing:.08em}
-.price-amount{font-size:2.5rem;font-weight:700;color:#4ad490;margin:1rem 0 .25rem}
-.price-period{font-size:.85rem;color:#4a7a5a}
-.price-features{list-style:none;text-align:left;margin:1.25rem 0;space-y:0.5rem}
-.price-features li{font-size:.85rem;color:#c8e0d8;padding:.35rem 0;border-bottom:1px solid #122a1a;display:flex;align-items:center;gap:.5rem}
-.price-features li::before{content:'✓';color:#4ad490;font-weight:700;flex-shrink:0}
-.price-features li.no::before{content:'✗';color:#4a7a5a}
+.section-pillars{padding:6rem 3rem;background:linear-gradient(180deg,transparent,rgba(143,175,154,.08) 30%,transparent)}
+.pillars-inner{max-width:1100px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:4rem}
+.section-label{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-mid);margin-bottom:.75rem}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);color:var(--text);margin-bottom:.75rem}
+.section-sub{font-size:.9rem;color:var(--text-mid);font-weight:300;max-width:480px;margin:0 auto;line-height:1.7}
+.pillars-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.pillar{background:#fff;border:1px solid var(--border);border-radius:20px;padding:2rem 1.5rem;transition:all .3s;position:relative;overflow:hidden}
+.pillar::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sage-deep),var(--sage-light));transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.pillar:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.pillar:hover::before{transform:scaleX(1)}
+.pillar-icon{width:44px;height:44px;border-radius:12px;background:rgba(58,82,68,.08);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.25rem}
+.pillar-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:.6rem}
+.pillar-text{font-size:.82rem;line-height:1.7;color:var(--text-mid);font-weight:300}
 
-/* SPINNER */
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid #1a4a2a;border-top-color:#4ad490;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.section-trust{padding:6rem 3rem;max-width:1100px;margin:0 auto}
+.trust-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:center}
+.trust-codes{display:flex;flex-direction:column;gap:.75rem;margin-top:1.5rem}
+.trust-code{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:#fff;border-radius:12px;border:1px solid var(--border)}
+.code-num{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--sage-deep);min-width:80px}
+.code-desc{font-size:.8rem;color:var(--text-mid);line-height:1.5}
+.trust-visual{background:var(--sage-deep);border-radius:24px;padding:2.5rem;color:#fff}
+.trust-vt{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:1.25rem;color:rgba(255,255,255,.9)}
+.trust-step{display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start}
+.trust-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;flex-shrink:0;margin-top:.1rem;color:rgba(255,255,255,.8)}
+.trust-step-t{font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.7);font-weight:300}
 
-/* TOAST */
-#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a4a2a;color:#4ad490;padding:.75rem 1.25rem;border-radius:10px;font-size:.85rem;font-weight:500;border:1px solid #2d9e6b;z-index:9999;display:none;animation:fadeIn .3s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-cta{padding:8rem 3rem;text-align:center}
+.cta-inner{max-width:640px;margin:0 auto;background:linear-gradient(135deg,var(--sage-deep) 0%,#2a3e30 100%);border-radius:32px;padding:4rem 3rem;position:relative;overflow:hidden}
+.cta-inner::before{content:'';position:absolute;top:-40%;right:-20%;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.04)}
+.cta-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);color:#fff;margin-bottom:.75rem;position:relative;z-index:1}
+.cta-sub{font-size:.9rem;color:rgba(255,255,255,.65);margin-bottom:2rem;font-weight:300;line-height:1.7;position:relative;z-index:1}
+.cta-actions{position:relative;z-index:1;display:flex;gap:.75rem;justify-content:center}
+
+/* DASHBOARD */
+#dashboard-section{display:none;padding:6rem 3rem 3rem;max-width:1200px;margin:0 auto}
+#dashboard-section.open{display:block}
+.dash-nav{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:0}
+.dash-tab{padding:.65rem 1.25rem;font-size:.82rem;font-weight:500;color:var(--text-light);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:'Outfit',sans-serif}
+.dash-tab:hover{color:var(--sage-deep)}
+.dash-tab.active{color:var(--sage-deep);border-bottom-color:var(--sage-deep)}
+.dash-view{display:none}
+.dash-view.active{display:block}
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.metric-tile{background:#fff;border-radius:16px;padding:1.25rem;border:1px solid var(--border)}
+.metric-tile-value{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--sage-deep)}
+.metric-tile-label{font-size:.72rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+.dash-card{background:#fff;border-radius:16px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.25rem}
+.dash-card-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center}
+.dt{width:100%;border-collapse:collapse}
+.dt th{text-align:left;font-size:.72rem;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+.dt td{padding:.85rem .75rem;font-size:.83rem;color:var(--text-mid);border-bottom:1px solid rgba(0,0,0,.04)}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:rgba(58,82,68,.02)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.ff{margin-bottom:1rem}
+.ff label{display:block;font-size:.78rem;font-weight:500;color:var(--text-mid);margin-bottom:.4rem}
+.ff input,.ff select,.ff textarea{width:100%;padding:.65rem .9rem;background:var(--parchment);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:.85rem;font-family:'Outfit',sans-serif;transition:border .2s}
+.ff input:focus,.ff select:focus,.ff textarea:focus{outline:none;border-color:var(--sage-mid)}
+.ff textarea{resize:vertical;min-height:80px}
+.empty-s{text-align:center;padding:3rem;color:var(--text-light)}
+.empty-s-icon{font-size:2.5rem;margin-bottom:.75rem}
+.empty-s p{font-size:.88rem;margin-bottom:1rem}
+.report-content{background:var(--parchment);border-radius:10px;padding:1.25rem;font-size:.82rem;line-height:1.8;color:var(--text-mid);white-space:pre-wrap;max-height:300px;overflow-y:auto}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(38,36,32,.7);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:24px;padding:2rem;max-width:480px;width:90%;box-shadow:var(--shadow-lg);animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--text);margin-bottom:1.25rem}
+.modal-footer{display:flex;gap:.75rem;margin-top:1.5rem}
+
+footer{padding:3rem;text-align:center;border-top:1px solid var(--border);font-size:.78rem;color:var(--text-light)}
+footer a{color:var(--sage-mid);text-decoration:none}
+
+#toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--sage-deep);color:#fff;padding:.75rem 1.25rem;border-radius:12px;font-size:.82rem;font-weight:500;box-shadow:var(--shadow);display:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
 @media(max-width:768px){
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
-  .pricing-grid{grid-template-columns:1fr}
-  .nav-tabs{display:none}
-  main{padding:1rem}
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .section-intro,.trust-grid{grid-template-columns:1fr;gap:2.5rem}
+  .pillars-grid{grid-template-columns:1fr 1fr}
+  .metrics-row{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  #dashboard-section{padding:5rem 1rem 2rem}
 }
 </style>
 </head>
@@ -139,430 +173,273 @@ select option{background:#0d2b1a}
 
 <nav>
   <div class="nav-brand">
-    <div class="nav-logo">🌿</div>
-    <div>
-      <div class="nav-title">Eco-Sync AI</div>
-      <div class="nav-subtitle">Nature-Based RTM Platform</div>
-    </div>
+    <div class="nav-mark">🌿</div>
+    <span class="nav-name">Eco-Sync AI</span>
   </div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" data-view="dashboard">Dashboard</button>
-    <button class="nav-tab" data-view="patients">Patients</button>
-    <button class="nav-tab" data-view="sessions">Sessions</button>
-    <button class="nav-tab" data-view="reports">Reports</button>
-    <button class="nav-tab" data-view="pricing">Pricing</button>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#pillars">Platform</a>
+    <a href="#clinical">Clinical</a>
   </div>
   <div class="nav-right">
-    <span class="badge-plan" id="plan-badge">Free Plan</span>
-    <button class="btn btn-primary btn-sm" onclick="openUpgradeModal()">Upgrade to Pro</button>
+    <button class="btn btn-outline" onclick="openUpgradeModal()">Pricing</button>
+    <button class="btn btn-primary" onclick="enterDashboard()">Open Dashboard</button>
   </div>
 </nav>
 
-<main>
-
-<!-- DASHBOARD -->
-<div class="view-section active" id="view-dashboard">
-  <div class="page-header">
-    <h1>Clinical Dashboard</h1>
-    <p>Real-time biometric monitoring for nature-based therapy</p>
-  </div>
-  <div class="grid-4" style="margin-bottom:1.5rem">
-    <div class="metric"><div class="metric-value" id="m-patients">0</div><div class="metric-label">Active Patients</div></div>
-    <div class="metric"><div class="metric-value" id="m-sessions">0</div><div class="metric-label">Sessions This Month</div></div>
-    <div class="metric"><div class="metric-value" id="m-reports">0</div><div class="metric-label">Reports Generated</div></div>
-    <div class="metric"><div class="metric-value" id="m-reg">—</div><div class="metric-label">Avg Regulation Index</div></div>
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header"><span class="card-title">Recent Sessions</span><button class="btn btn-ghost btn-sm" onclick="showView('sessions')">View All</button></div>
-      <div id="recent-sessions"><div class="empty"><div class="empty-icon">🌲</div><p>No sessions yet</p><button class="btn btn-primary btn-sm" onclick="showView('patients')">Add a Patient</button></div></div>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🌲 Nature-Based RTM Platform</div>
+    <h1 class="hero-title">Where the wilderness<br/>becomes <em>evidence</em></h1>
+    <p class="hero-sub">A clinical AI platform that listens to the nervous system in nature — mapping biometric regulation in real time, generating the evidence that transforms outdoor therapy into billable, insurable medicine.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" onclick="enterDashboard()">Enter Platform</button>
+      <a href="#about" class="btn btn-outline btn-lg">Learn More</a>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="card-title">Environment Effectiveness</span></div>
-      <div id="env-chart" style="padding:1rem 0">
-        <div style="margin-bottom:.75rem" id="env-bars"><div class="empty"><div class="empty-icon">📊</div><p>Data will appear after sessions</p></div></div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-intro">
+    <div class="reveal">
+      <div class="intro-label">The Problem</div>
+      <h2 class="intro-title">Nature heals. But insurance needs proof.</h2>
+      <p class="intro-text">Nature-based therapy is clinically effective — but without objective, real-time physiological data, payers categorize it as wellness, not medicine. Clinicians doing their most meaningful work in the field are left without the documentation to justify it.</p>
+      <p class="intro-text">Eco-Sync AI closes that gap. It synchronizes wearable biosensors with a clinician dashboard, detecting stress events the moment they occur in a natural environment — and generating the evidence record that changes how this work is classified, funded, and accessed.</p>
+    </div>
+    <div class="reveal" style="transition-delay:.15s">
+      <div class="visual-card">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem">
+          <div style="width:8px;height:8px;border-radius:50%;background:#3A5244"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#8FAF9A"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#B8CBBF"></div>
+          <span style="font-size:.72rem;color:#8A857E;margin-left:.25rem">Live Session — Forest Trail</span>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div class="visual-metric-label">HRV — Rate of Regulation</div>
+          <div class="visual-bar-track"><div class="visual-bar-fill" style="width:72%"></div></div>
+          <div class="visual-stat"><span>RMSSD 42ms</span><span class="vbadge vbadge-g">↑ Regulating</span></div>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div class="visual-metric-label">Electrodermal Activity</div>
+          <div class="visual-bar-track"><div class="visual-bar-fill" style="width:38%;background:linear-gradient(90deg,#8a6020,#c8a050)"></div></div>
+          <div class="visual-stat"><span>EDA 0.8 μS</span><span class="vbadge vbadge-a">Mild arousal</span></div>
+        </div>
+        <div style="padding-top:1.25rem;border-top:1px solid #f0ece6">
+          <div style="font-size:.72rem;color:#8A857E;margin-bottom:.5rem">AI Assessment</div>
+          <div style="font-size:.82rem;color:#3A5244;line-height:1.6;background:rgba(58,82,68,.06);padding:.75rem;border-radius:8px">Client showing parasympathetic recovery following initial anxiety spike. Forest canopy exposure correlating with HRV improvement.</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- PATIENTS -->
-<div class="view-section" id="view-patients">
-  <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
-    <div><h1>Patients</h1><p>Manage your client roster</p></div>
-    <button class="btn btn-primary" onclick="openAddPatientModal()">+ Add Patient</button>
+<section id="pillars" class="section-pillars">
+  <div class="pillars-inner">
+    <div class="section-header reveal">
+      <div class="section-label">The Platform</div>
+      <h2 class="section-title">Four systems. One closed loop.</h2>
+      <p class="section-sub">From wearable sensor to insurance submission — every step handled with clinical precision.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar reveal"><div class="pillar-icon">📡</div><div class="pillar-title">Biometric Capture</div><p class="pillar-text">HRV and EDA collected continuously from weatherproof wearables. Real-time data streamed to the clinician the moment a stress event occurs.</p></div>
+      <div class="pillar reveal" style="transition-delay:.1s"><div class="pillar-icon">🧠</div><div class="pillar-title">AI Analysis</div><p class="pillar-text">A machine learning engine trained on both ABA and MFT datasets detects deviations from each patient's unique Window of Tolerance.</p></div>
+      <div class="pillar reveal" style="transition-delay:.2s"><div class="pillar-icon">🥽</div><div class="pillar-title">Clinical Dashboard</div><p class="pillar-text">Real-time physiological overlay via AR glasses or mobile. The therapist maintains eye contact while viewing a live vitals feed and grounding prompts.</p></div>
+      <div class="pillar reveal" style="transition-delay:.3s"><div class="pillar-icon">📋</div><div class="pillar-title">Evidence Engine</div><p class="pillar-text">Post-session, the system compiles biometric data into a Biometric Impact Report — defensible documentation for insurance reimbursement.</p></div>
+    </div>
   </div>
-  <div class="card">
-    <div id="patients-table">
-      <div class="empty"><div class="empty-icon">👤</div><p>No patients yet. Add your first patient to get started.</p><button class="btn btn-primary" onclick="openAddPatientModal()">Add Patient</button></div>
+</section>
+
+<section id="clinical" class="section-trust">
+  <div class="trust-grid">
+    <div class="reveal">
+      <div class="intro-label">Clinical Credibility</div>
+      <h2 class="intro-title">Built for how insurance actually works in 2026.</h2>
+      <p class="intro-text">Remote Therapeutic Monitoring codes represent a fundamental shift in how payers reimburse non-physiological clinical data. Eco-Sync AI generates compliant documentation for these categories.</p>
+      <div class="trust-codes">
+        <div class="trust-code"><div class="code-num">CPT 98975</div><div class="code-desc">RTM device supply with software, initial setup and patient education</div></div>
+        <div class="trust-code"><div class="code-num">CPT 98977</div><div class="code-desc">RTM device supply — musculoskeletal system monitoring</div></div>
+        <div class="trust-code"><div class="code-num">CPT 98980</div><div class="code-desc">RTM treatment management, first 20 minutes</div></div>
+        <div class="trust-code"><div class="code-num">CPT 98981</div><div class="code-desc">RTM treatment management, each additional 20 minutes</div></div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:.15s">
+      <div class="trust-visual">
+        <div class="trust-vt">How the Data Travels</div>
+        <div class="trust-step"><div class="trust-num">1</div><div class="trust-step-t">Weatherproof wearable captures continuous HRV and EDA in the natural environment</div></div>
+        <div class="trust-step"><div class="trust-num">2</div><div class="trust-step-t">Mobile app logs GPS coordinates and environmental metadata — forest, water, elevation</div></div>
+        <div class="trust-step"><div class="trust-num">3</div><div class="trust-step-t">AI compares real-time data to patient baseline and detects Clinical Stress Events</div></div>
+        <div class="trust-step"><div class="trust-num">4</div><div class="trust-step-t">Clinician dashboard alerts and delivers environment-specific grounding suggestions</div></div>
+        <div class="trust-step"><div class="trust-num">5</div><div class="trust-step-t">Automated Biometric Impact Report generated — ready for insurance submission</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-cta reveal">
+  <div class="cta-inner">
+    <h2 class="cta-title">Your practice, extended into the wild.</h2>
+    <p class="cta-sub">Start with the free tier — three session reports per month, no commitment. Upgrade when the evidence speaks for itself.</p>
+    <div class="cta-actions">
+      <button class="btn btn-white btn-lg" onclick="enterDashboard()">Start Free</button>
+      <button class="btn btn-ghost-white btn-lg" onclick="openUpgradeModal()">View Pricing</button>
+    </div>
+  </div>
+</section>
+
+<div id="dashboard-section">
+  <div class="dash-nav">
+    <button class="dash-tab active" data-dash="overview">Overview</button>
+    <button class="dash-tab" data-dash="patients">Patients</button>
+    <button class="dash-tab" data-dash="sessions">Sessions</button>
+    <button class="dash-tab" data-dash="reports">Reports</button>
+  </div>
+  <div class="dash-view active" id="dash-overview">
+    <div class="metrics-row">
+      <div class="metric-tile"><div class="metric-tile-value" id="m-p">0</div><div class="metric-tile-label">Patients</div></div>
+      <div class="metric-tile"><div class="metric-tile-value" id="m-s">0</div><div class="metric-tile-label">Sessions</div></div>
+      <div class="metric-tile"><div class="metric-tile-value" id="m-r">0</div><div class="metric-tile-label">Reports</div></div>
+      <div class="metric-tile"><div class="metric-tile-value" id="m-reg">—</div><div class="metric-tile-label">Avg Regulation</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+      <div class="dash-card"><div class="dash-card-title">Recent Sessions <button class="btn btn-outline btn-sm" onclick="showDash('sessions')">View All</button></div><div id="ov-sess"></div></div>
+      <div class="dash-card"><div class="dash-card-title">Environment Breakdown</div><div id="ov-env"></div></div>
+    </div>
+  </div>
+  <div class="dash-view" id="dash-patients">
+    <div class="dash-card">
+      <div class="dash-card-title">Patients <button class="btn btn-primary btn-sm" onclick="openAddPatient()">+ Add Patient</button></div>
+      <div id="pt-body"></div>
+    </div>
+  </div>
+  <div class="dash-view" id="dash-sessions">
+    <div class="dash-card"><div class="dash-card-title">Sessions</div><div id="sess-body"></div></div>
+  </div>
+  <div class="dash-view" id="dash-reports">
+    <div class="dash-card">
+      <div class="dash-card-title">Clinical Reports <span style="font-size:.75rem;color:var(--text-light);font-weight:300">CPT 98975–98981 formatted</span></div>
+      <div style="background:rgba(58,82,68,.06);border:1px solid rgba(58,82,68,.15);border-radius:10px;padding:.75rem 1rem;font-size:.8rem;color:var(--sage-mid);margin-bottom:1rem">Reports include biometric correlation data required for RTM insurance reimbursement.</div>
+      <div id="rep-body"></div>
     </div>
   </div>
 </div>
-
-<!-- SESSIONS -->
-<div class="view-section" id="view-sessions">
-  <div class="page-header"><h1>Sessions</h1><p>Log and review nature therapy sessions</p></div>
-  <div class="card">
-    <div id="sessions-table">
-      <div class="empty"><div class="empty-icon">🌿</div><p>No sessions logged yet.</p></div>
-    </div>
-  </div>
-</div>
-
-<!-- REPORTS -->
-<div class="view-section" id="view-reports">
-  <div class="page-header"><h1>Clinical Reports</h1><p>AI-generated necessity reports for insurance submission (CPT 98975-98981)</p></div>
-  <div class="alert alert-info">Reports are formatted for RTM billing and include biometric correlation data required for insurance reimbursement.</div>
-  <div id="reports-list">
-    <div class="empty"><div class="empty-icon">📋</div><p>No reports generated yet. Complete a session to generate your first report.</p></div>
-  </div>
-</div>
-
-<!-- PRICING -->
-<div class="view-section" id="view-pricing">
-  <div class="page-header" style="text-align:center"><h1>Simple Pricing</h1><p>Start free. Upgrade when you're ready.</p></div>
-  <div class="pricing-grid">
-    <div class="pricing-card">
-      <div style="font-size:1.1rem;font-weight:700;color:#7dc4a0">Free</div>
-      <div class="price-amount">$0<span style="font-size:1rem;color:#4a7a5a">/mo</span></div>
-      <ul class="price-features">
-        <li>3 session reports per month</li>
-        <li>Up to 5 patients</li>
-        <li>Basic biometric logging</li>
-        <li class="no">Unlimited reports</li>
-        <li class="no">Insurance export</li>
-        <li class="no">API access</li>
-      </ul>
-      <button class="btn btn-ghost" style="width:100%" onclick="showView('patients')">Get Started Free</button>
-    </div>
-    <div class="pricing-card featured">
-      <div style="font-size:1.1rem;font-weight:700;color:#4ad490">Pro</div>
-      <div class="price-amount">$49<span style="font-size:1rem;color:#4a7a5a">/mo</span></div>
-      <div class="price-period">Cancel anytime</div>
-      <ul class="price-features">
-        <li>Unlimited session reports</li>
-        <li>Unlimited patients</li>
-        <li>Full biometric logging</li>
-        <li>Insurance-ready exports</li>
-        <li>Multi-clinician access</li>
-        <li>API access</li>
-      </ul>
-      <button class="btn btn-primary" style="width:100%" onclick="openUpgradeModal()">Upgrade to Pro</button>
-    </div>
-  </div>
-</div>
-
-</main>
 
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-upgrade">
-  <div class="modal">
-    <h2>🌿 Upgrade to Pro</h2>
-    <p style="color:#7dc4a0;font-size:.88rem;margin-bottom:1.25rem">Unlock unlimited reports, insurance exports, and full patient management.</p>
-    <div style="background:#0a1f14;border-radius:10px;padding:1rem;text-align:center;margin-bottom:1.25rem">
-      <div style="font-size:2rem;font-weight:700;color:#4ad490">$49<span style="font-size:1rem;color:#4a7a5a">/month</span></div>
+  <div class="modal-box">
+    <div class="modal-title">🌿 Eco-Sync AI Pricing</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+      <div style="border:1.5px solid var(--border);border-radius:14px;padding:1.25rem;text-align:center">
+        <div style="font-weight:600;color:var(--text-mid);margin-bottom:.5rem">Free</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--text)">$0</div>
+        <div style="font-size:.72rem;color:var(--text-light);margin-bottom:1rem">/month</div>
+        <div style="font-size:.78rem;color:var(--text-mid);line-height:1.7">3 reports/month<br/>Up to 5 patients<br/>Basic logging</div>
+      </div>
+      <div style="border:2px solid var(--sage-deep);border-radius:14px;padding:1.25rem;text-align:center;background:rgba(58,82,68,.03)">
+        <div style="font-weight:600;color:var(--sage-deep);margin-bottom:.5rem">Pro</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--sage-deep)">$49</div>
+        <div style="font-size:.72rem;color:var(--text-light);margin-bottom:1rem">/month</div>
+        <div style="font-size:.78rem;color:var(--text-mid);line-height:1.7">Unlimited reports<br/>Unlimited patients<br/>Insurance exports + API</div>
+      </div>
     </div>
-    <div class="form-group"><label>Email Address</label><input type="email" id="upgrade-email" placeholder="clinician@example.com"/></div>
+    <div class="ff"><label>Email to Subscribe</label><input type="email" id="upgrade-email" placeholder="clinician@example.com"/></div>
     <div class="modal-footer">
-      <button class="btn btn-primary" style="flex:1" onclick="startCheckout()">Subscribe Now</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-upgrade')">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="startCheckout()">Subscribe to Pro</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-upgrade')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-patient">
+  <div class="modal-box">
+    <div class="modal-title">Add Patient</div>
+    <div class="form-row">
+      <div class="ff"><label>Patient Code</label><input type="text" id="p-code" placeholder="JD-001"/></div>
+      <div class="ff"><label>Diagnosis</label><select id="p-diag"><option>PTSD</option><option>ASD</option><option>Anxiety Disorder</option><option>Depression</option><option>Complex Trauma</option><option>Other</option></select></div>
+    </div>
+    <div class="ff"><label>HRV Baseline (RMSSD ms)</label><input type="number" id="p-hrv" placeholder="e.g. 38" step="0.1"/></div>
+    <div class="ff"><label>Clinical Notes</label><textarea id="p-notes" placeholder="Context, goals, prior treatments..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" style="flex:1" onclick="addPatient()">Add Patient</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-patient')">Cancel</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-session">
-  <div class="modal">
-    <h2>🌲 Log Session</h2>
-    <input type="hidden" id="session-patient-id"/>
-    <div class="form-group"><label>Environment</label>
-      <select id="s-env">
-        <option>Forest</option><option>Water / Riverside</option><option>Open Field / Meadow</option>
-        <option>Mountain / Elevation</option><option>Urban Park</option><option>Beach / Coastal</option>
-      </select>
+  <div class="modal-box">
+    <div class="modal-title">Log Session</div>
+    <input type="hidden" id="s-pid"/>
+    <div class="form-row">
+      <div class="ff"><label>Environment</label><select id="s-env"><option>Forest</option><option>Water / Riverside</option><option>Open Field</option><option>Mountain</option><option>Urban Park</option><option>Beach / Coastal</option></select></div>
+      <div class="ff"><label>Duration (min)</label><input type="number" id="s-dur" value="45" min="5" max="240"/></div>
     </div>
-    <div class="grid-2">
-      <div class="form-group"><label>Duration (minutes)</label><input type="number" id="s-duration" value="45" min="5" max="240"/></div>
-      <div class="form-group"><label>Stress Events (0-10)</label><input type="number" id="s-stress" value="3" min="0" max="10"/></div>
+    <div class="form-row">
+      <div class="ff"><label>Stress Events (0–10)</label><input type="number" id="s-stress" value="3" min="0" max="10"/></div>
+      <div class="ff"><label>HRV During Session (RMSSD)</label><input type="number" id="s-hrv" placeholder="e.g. 42" step="0.1"/></div>
     </div>
-    <div class="form-group"><label>HRV Baseline</label><input type="number" id="s-hrv" placeholder="e.g. 42" step="0.1"/></div>
-    <div class="form-group"><label>Clinical Notes</label><textarea id="s-notes" placeholder="Observations, interventions, patient response..."></textarea></div>
+    <div class="ff"><label>Clinical Notes</label><textarea id="s-notes" placeholder="Observations, interventions, patient response..."></textarea></div>
     <div class="modal-footer">
       <button class="btn btn-primary" style="flex:1" onclick="submitSession()">Save Session</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-session')">Cancel</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-session')">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-add-patient">
-  <div class="modal">
-    <h2>👤 Add Patient</h2>
-    <div class="form-group"><label>Patient Code / Initials</label><input type="text" id="p-code" placeholder="e.g. JD-001"/></div>
-    <div class="form-group"><label>Primary Diagnosis</label>
-      <select id="p-diagnosis">
-        <option>PTSD</option><option>ASD</option><option>Anxiety Disorder</option>
-        <option>Depression</option><option>Complex Trauma</option><option>Other</option>
-      </select>
-    </div>
-    <div class="form-group"><label>HRV Baseline (RMSSD)</label><input type="number" id="p-hrv" placeholder="e.g. 38" step="0.1"/></div>
-    <div class="form-group"><label>Notes</label><textarea id="p-notes" placeholder="Clinical context, goals..."></textarea></div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" style="flex:1" onclick="addPatient()">Add Patient</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-add-patient')">Cancel</button>
-    </div>
-  </div>
-</div>
+<footer>
+  <p>Eco-Sync AI &mdash; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="mailto:hello@ecosyncai.com">Contact</a></p>
+  <p style="margin-top:.4rem;font-size:.72rem">Patent Pending &mdash; System and Method for Biometrically Triggered Clinical Interventions in Natural Environments</p>
+</footer>
 
 <div id="toast"></div>
 
 <script>
-// ── STATE ──────────────────────────────────────────
-var state = {
-  patients: JSON.parse(localStorage.getItem('ecosync_patients') || '[]'),
-  sessions: JSON.parse(localStorage.getItem('ecosync_sessions') || '[]'),
-  reports:  JSON.parse(localStorage.getItem('ecosync_reports')  || '[]'),
-  plan: 'free'
-};
-
-function saveState() {
-  localStorage.setItem('ecosync_patients', JSON.stringify(state.patients));
-  localStorage.setItem('ecosync_sessions', JSON.stringify(state.sessions));
-  localStorage.setItem('ecosync_reports',  JSON.stringify(state.reports));
+var S={patients:JSON.parse(localStorage.getItem('es_p')||'[]'),sessions:JSON.parse(localStorage.getItem('es_s')||'[]'),reports:JSON.parse(localStorage.getItem('es_r')||'[]')};
+function save(){localStorage.setItem('es_p',JSON.stringify(S.patients));localStorage.setItem('es_s',JSON.stringify(S.sessions));localStorage.setItem('es_r',JSON.stringify(S.reports));}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},3000);}
+function openUpgradeModal(){document.getElementById('modal-upgrade').classList.add('open');}
+function openAddPatient(){document.getElementById('modal-patient').classList.add('open');}
+function openSessionModal(pid){document.getElementById('s-pid').value=pid||'';document.getElementById('modal-session').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target===el)el.classList.remove('open');});});
+function enterDashboard(){var d=document.getElementById('dashboard-section');d.classList.add('open');d.scrollIntoView({behavior:'smooth',block:'start'});renderAll();}
+function showDash(name){document.querySelectorAll('.dash-view').forEach(function(v){v.classList.remove('active');});document.querySelectorAll('.dash-tab').forEach(function(t){t.classList.remove('active');});var v=document.getElementById('dash-'+name);if(v)v.classList.add('active');var t=document.querySelector('[data-dash="'+name+'"]');if(t)t.classList.add('active');renderAll();}
+document.querySelectorAll('.dash-tab').forEach(function(tab){tab.addEventListener('click',function(){showDash(this.getAttribute('data-dash'));});});
+function addPatient(){var code=document.getElementById('p-code').value.trim();if(!code){toast('Enter a patient code');return;}S.patients.push({id:Date.now().toString(),code:code,diagnosis:document.getElementById('p-diag').value,hrv:parseFloat(document.getElementById('p-hrv').value)||null,notes:document.getElementById('p-notes').value,created:new Date().toISOString()});save();closeModal('modal-patient');document.getElementById('p-code').value='';document.getElementById('p-hrv').value='';document.getElementById('p-notes').value='';toast('Patient added');renderAll();}
+function submitSession(){S.sessions.push({id:Date.now().toString(),pid:document.getElementById('s-pid').value,environment:document.getElementById('s-env').value,duration:parseInt(document.getElementById('s-dur').value)||45,stress:parseInt(document.getElementById('s-stress').value)||0,hrv:parseFloat(document.getElementById('s-hrv').value)||null,notes:document.getElementById('s-notes').value,date:new Date().toISOString()});save();closeModal('modal-session');document.getElementById('s-notes').value='';document.getElementById('s-hrv').value='';toast('Session logged');renderAll();}
+function generateReport(pid){var patient=S.patients.find(function(p){return p.id===pid;});if(!patient){toast('Patient not found');return;}var sessions=S.sessions.filter(function(s){return s.pid===pid;});if(!sessions.length){toast('Log a session first');return;}toast('Generating report...');fetch('/report/'+pid,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({patient:patient,sessions:sessions})}).then(function(r){return r.json();}).then(function(d){if(d.report){S.reports.push({id:Date.now().toString(),pid:pid,code:patient.code,content:d.report,sessions:sessions.length,date:new Date().toISOString()});save();toast('Report ready');showDash('reports');}else{toast(d.error||'Error');}}).catch(function(){toast('Connection error');});}
+function downloadReport(id){var r=S.reports.find(function(x){return x.id===id;});if(!r)return;var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.content],{type:'text/plain'}));a.download='EcoSync_'+r.code+'_'+new Date(r.date).toISOString().split('T')[0]+'.txt';a.click();}
+function startCheckout(){var e=document.getElementById('upgrade-email').value;if(!e){toast('Enter your email');return;}fetch('/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e})}).then(function(r){return r.json();}).then(function(d){if(d.url)window.location.href=d.url;else toast(d.error||'Error');}).catch(function(){toast('Connection error');});}
+function renderAll(){
+  document.getElementById('m-p').textContent=S.patients.length;
+  document.getElementById('m-s').textContent=S.sessions.length;
+  document.getElementById('m-r').textContent=S.reports.length;
+  var reg=S.sessions.length?Math.round((1-S.sessions.reduce(function(a,s){return a+s.stress;},0)/(S.sessions.length*10))*100):null;
+  document.getElementById('m-reg').textContent=reg!==null?reg+'%':'—';
+  var ov=document.getElementById('ov-sess');
+  if(!S.sessions.length){ov.innerHTML='<div class="empty-s"><div class="empty-s-icon">🌲</div><p>No sessions yet</p><button class="btn btn-primary btn-sm" onclick="openAddPatient()">Add a Patient</button></div>';}
+  else{ov.innerHTML='<table class="dt"><thead><tr><th>Date</th><th>Patient</th><th>Environment</th><th>Stress</th></tr></thead><tbody>'+S.sessions.slice(-5).reverse().map(function(s){var p=S.patients.find(function(pt){return pt.id===s.pid;});return'<tr><td>'+new Date(s.date).toLocaleDateString()+'</td><td>'+(p?p.code:'—')+'</td><td>'+s.environment+'</td><td>'+s.stress+'/10</td></tr>';}).join('')+'</tbody></table>';}
+  var envEl=document.getElementById('ov-env');var ec={};S.sessions.forEach(function(s){ec[s.environment]=(ec[s.environment]||0)+1;});var entries=Object.entries(ec);
+  if(!entries.length){envEl.innerHTML='<div class="empty-s"><div class="empty-s-icon">📊</div><p>Data appears after sessions</p></div>';}
+  else{var mx=Math.max.apply(null,Object.values(ec));envEl.innerHTML=entries.map(function(e){var pct=Math.round(e[1]/mx*100);return'<div style="margin-bottom:.75rem"><div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-mid);margin-bottom:.3rem"><span>'+e[0]+'</span><span>'+e[1]+'</span></div><div style="background:var(--cream);border-radius:4px;height:6px"><div style="background:linear-gradient(90deg,var(--sage-deep),var(--sage-light));height:6px;border-radius:4px;width:'+pct+'%"></div></div></div>';}).join('');}
+  var ptEl=document.getElementById('pt-body');
+  if(!S.patients.length){ptEl.innerHTML='<div class="empty-s"><div class="empty-s-icon">👤</div><p>No patients yet</p><button class="btn btn-primary btn-sm" onclick="openAddPatient()">Add Patient</button></div>';}
+  else{ptEl.innerHTML='<table class="dt"><thead><tr><th>Code</th><th>Diagnosis</th><th>HRV Baseline</th><th>Sessions</th><th>Actions</th></tr></thead><tbody>'+S.patients.map(function(p){var sc=S.sessions.filter(function(s){return s.pid===p.id;}).length;return'<tr><td><strong>'+p.code+'</strong></td><td>'+p.diagnosis+'</td><td>'+(p.hrv||'—')+' ms</td><td>'+sc+'</td><td style="display:flex;gap:.5rem"><button class="btn btn-outline btn-sm" onclick="openSessionModal(\''+p.id+'\')">+ Session</button><button class="btn btn-outline btn-sm" onclick="generateReport(\''+p.id+'\')">Report</button></td></tr>';}).join('')+'</tbody></table>';}
+  var sEl=document.getElementById('sess-body');
+  if(!S.sessions.length){sEl.innerHTML='<div class="empty-s"><div class="empty-s-icon">🌿</div><p>No sessions yet</p></div>';}
+  else{sEl.innerHTML='<table class="dt"><thead><tr><th>Date</th><th>Patient</th><th>Environment</th><th>Duration</th><th>Stress</th><th>HRV</th><th></th></tr></thead><tbody>'+S.sessions.slice().reverse().map(function(s){var p=S.patients.find(function(pt){return pt.id===s.pid;});return'<tr><td>'+new Date(s.date).toLocaleDateString()+'</td><td>'+(p?p.code:'—')+'</td><td>'+s.environment+'</td><td>'+s.duration+' min</td><td>'+s.stress+'/10</td><td>'+(s.hrv||'—')+'</td><td><button class="btn btn-outline btn-sm" onclick="generateReport(\''+s.pid+'\')">Report</button></td></tr>';}).join('')+'</tbody></table>';}
+  var rEl=document.getElementById('rep-body');
+  if(!S.reports.length){rEl.innerHTML='<div class="empty-s"><div class="empty-s-icon">📋</div><p>No reports yet — complete a session and click Generate Report</p></div>';}
+  else{rEl.innerHTML=S.reports.slice().reverse().map(function(r){return'<div style="border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem"><div><strong>'+r.code+'</strong><span style="font-size:.75rem;color:var(--text-light);margin-left:.75rem">'+new Date(r.date).toLocaleDateString()+' · '+r.sessions+' sessions</span></div><button class="btn btn-outline btn-sm" onclick="downloadReport(\''+r.id+'\')">⬇ Download</button></div><div class="report-content">'+(r.content||'').substring(0,600)+(r.content&&r.content.length>600?'...':'')+'</div></div>';}).join('');}
 }
-
-// ── NAVIGATION ─────────────────────────────────────
-function showView(v) {
-  document.querySelectorAll('.view-section').forEach(function(el) {
-    el.classList.remove('active');
-  });
-  document.querySelectorAll('.nav-tab').forEach(function(el) {
-    el.classList.remove('active');
-  });
-  var section = document.getElementById('view-' + v);
-  if (section) section.classList.add('active');
-  var tab = document.querySelector('[data-view="' + v + '"]');
-  if (tab) tab.classList.add('active');
-  if (v === 'dashboard') renderDashboard();
-  if (v === 'patients') renderPatients();
-  if (v === 'sessions') renderSessions();
-  if (v === 'reports') renderReports();
-}
-
-// ── MODALS ─────────────────────────────────────────
-function openUpgradeModal() {
-  document.getElementById('modal-upgrade').classList.add('open');
-}
-function openSessionModal(patientId) {
-  document.getElementById('session-patient-id').value = patientId || '';
-  document.getElementById('modal-session').classList.add('open');
-}
-function openAddPatientModal() {
-  document.getElementById('modal-add-patient').classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-document.querySelectorAll('.modal-overlay').forEach(function(el) {
-  el.addEventListener('click', function(e) {
-    if (e.target === el) el.classList.remove('open');
-  });
-});
-
-// ── TOAST ──────────────────────────────────────────
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(function() { t.style.display = 'none'; }, 3000);
-}
-
-// ── PATIENTS ───────────────────────────────────────
-function addPatient() {
-  var code = document.getElementById('p-code').value.trim();
-  if (!code) { showToast('Please enter a patient code'); return; }
-  var patient = {
-    id: Date.now().toString(),
-    code: code,
-    diagnosis: document.getElementById('p-diagnosis').value,
-    hrv_baseline: parseFloat(document.getElementById('p-hrv').value) || null,
-    notes: document.getElementById('p-notes').value,
-    created: new Date().toISOString(),
-    status: 'active'
-  };
-  state.patients.push(patient);
-  saveState();
-  closeModal('modal-add-patient');
-  document.getElementById('p-code').value = '';
-  document.getElementById('p-hrv').value = '';
-  document.getElementById('p-notes').value = '';
-  showToast('Patient added successfully');
-  renderPatients();
-  renderDashboard();
-}
-
-function renderPatients() {
-  var el = document.getElementById('patients-table');
-  if (!state.patients.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">👤</div><p>No patients yet.</p><button class="btn btn-primary" onclick="openAddPatientModal()">Add Patient</button></div>';
-    return;
-  }
-  var rows = state.patients.map(function(p) {
-    var sessions = state.sessions.filter(function(s) { return s.patient_id === p.id; }).length;
-    return '<tr><td><strong>' + p.code + '</strong></td><td>' + p.diagnosis + '</td><td>' + (p.hrv_baseline || '—') + '</td><td>' + sessions + '</td><td><span class="status status-active"><span class="status-dot"></span>' + p.status + '</span></td><td><button class="btn btn-ghost btn-sm" onclick="openSessionModal(\'' + p.id + '\')">+ Session</button> <button class="btn btn-ghost btn-sm" onclick="generateReport(\'' + p.id + '\')">Report</button></td></tr>';
-  }).join('');
-  el.innerHTML = '<table><thead><tr><th>Patient</th><th>Diagnosis</th><th>HRV Baseline</th><th>Sessions</th><th>Status</th><th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table>';
-}
-
-// ── SESSIONS ───────────────────────────────────────
-function submitSession() {
-  var pid = document.getElementById('session-patient-id').value;
-  var session = {
-    id: Date.now().toString(),
-    patient_id: pid,
-    environment: document.getElementById('s-env').value,
-    duration: parseInt(document.getElementById('s-duration').value) || 45,
-    stress_events: parseInt(document.getElementById('s-stress').value) || 0,
-    hrv_session: parseFloat(document.getElementById('s-hrv').value) || null,
-    notes: document.getElementById('s-notes').value,
-    date: new Date().toISOString()
-  };
-  state.sessions.push(session);
-  saveState();
-  closeModal('modal-session');
-  document.getElementById('s-notes').value = '';
-  document.getElementById('s-hrv').value = '';
-  showToast('Session logged successfully');
-  renderSessions();
-  renderDashboard();
-}
-
-function renderSessions() {
-  var el = document.getElementById('sessions-table');
-  if (!state.sessions.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🌿</div><p>No sessions yet.</p></div>';
-    return;
-  }
-  var rows = state.sessions.slice().reverse().map(function(s) {
-    var patient = state.patients.find(function(p) { return p.id === s.patient_id; });
-    var pname = patient ? patient.code : 'Unknown';
-    var date = new Date(s.date).toLocaleDateString();
-    return '<tr><td>' + date + '</td><td>' + pname + '</td><td>' + s.environment + '</td><td>' + s.duration + ' min</td><td>' + s.stress_events + '</td><td>' + (s.hrv_session || '—') + '</td><td><button class="btn btn-ghost btn-sm" onclick="generateReport(\'' + s.patient_id + '\')">Report</button></td></tr>';
-  }).join('');
-  el.innerHTML = '<table><thead><tr><th>Date</th><th>Patient</th><th>Environment</th><th>Duration</th><th>Stress Events</th><th>HRV</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table>';
-}
-
-// ── REPORTS ────────────────────────────────────────
-function generateReport(patientId) {
-  var patient = state.patients.find(function(p) { return p.id === patientId; });
-  if (!patient) { showToast('Patient not found'); return; }
-  var sessions = state.sessions.filter(function(s) { return s.patient_id === patientId; });
-  if (!sessions.length) { showToast('No sessions found for this patient. Log a session first.'); return; }
-  showToast('Generating clinical report...');
-  fetch('/report/' + patientId, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({patient: patient, sessions: sessions})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.report) {
-      var report = {
-        id: Date.now().toString(),
-        patient_id: patientId,
-        patient_code: patient.code,
-        content: data.report,
-        date: new Date().toISOString(),
-        sessions_count: sessions.length
-      };
-      state.reports.push(report);
-      saveState();
-      showToast('Report generated successfully');
-      showView('reports');
-    }
-  })
-  .catch(function() { showToast('Error generating report. Check your connection.'); });
-}
-
-function renderReports() {
-  var el = document.getElementById('reports-list');
-  if (!state.reports.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>No reports yet. Complete a session and click "Report" to generate.</p></div>';
-    return;
-  }
-  el.innerHTML = state.reports.slice().reverse().map(function(r) {
-    return '<div class="card" style="margin-bottom:1rem"><div class="card-header"><span class="card-title">📋 ' + r.patient_code + ' — ' + new Date(r.date).toLocaleDateString() + '</span><div style="display:flex;gap:.5rem"><button class="btn btn-ghost btn-sm" onclick="downloadReport(\'' + r.id + '\')">⬇ Download</button></div></div><div class="report-section"><p style="white-space:pre-wrap;font-size:.82rem">' + (r.content || '').substring(0, 500) + '...</p></div></div>';
-  }).join('');
-}
-
-function downloadReport(reportId) {
-  var report = state.reports.find(function(r) { return r.id === reportId; });
-  if (!report) return;
-  var blob = new Blob([report.content], {type: 'text/plain'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'EcoSync_Report_' + report.patient_code + '_' + new Date(report.date).toISOString().split('T')[0] + '.txt';
-  a.click();
-}
-
-// ── DASHBOARD ──────────────────────────────────────
-function renderDashboard() {
-  document.getElementById('m-patients').textContent = state.patients.length;
-  document.getElementById('m-sessions').textContent = state.sessions.length;
-  document.getElementById('m-reports').textContent = state.reports.length;
-  var avgReg = state.sessions.length ? Math.round((10 - (state.sessions.reduce(function(a,s){return a+s.stress_events},0)/state.sessions.length)) * 10) : null;
-  document.getElementById('m-reg').textContent = avgReg ? avgReg + '%' : '—';
-  var recentEl = document.getElementById('recent-sessions');
-  if (!state.sessions.length) {
-    recentEl.innerHTML = '<div class="empty"><div class="empty-icon">🌲</div><p>No sessions yet</p><button class="btn btn-primary btn-sm" onclick="showView(\'patients\')">Add a Patient</button></div>';
-  } else {
-    var recent = state.sessions.slice(-5).reverse();
-    recentEl.innerHTML = '<table><thead><tr><th>Date</th><th>Patient</th><th>Environment</th><th>Stress</th></tr></thead><tbody>' +
-      recent.map(function(s) {
-        var p = state.patients.find(function(pt){return pt.id===s.patient_id;});
-        return '<tr><td>' + new Date(s.date).toLocaleDateString() + '</td><td>' + (p?p.code:'—') + '</td><td>' + s.environment + '</td><td>' + s.stress_events + '/10</td></tr>';
-      }).join('') + '</tbody></table>';
-  }
-  var envCounts = {};
-  state.sessions.forEach(function(s) { envCounts[s.environment] = (envCounts[s.environment]||0)+1; });
-  var envEl = document.getElementById('env-bars');
-  if (!Object.keys(envCounts).length) {
-    envEl.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><p>Data will appear after sessions</p></div>';
-  } else {
-    var max = Math.max.apply(null, Object.values(envCounts));
-    envEl.innerHTML = Object.entries(envCounts).map(function(e) {
-      var pct = Math.round((e[1]/max)*100);
-      return '<div style="margin-bottom:.75rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;color:#7dc4a0;margin-bottom:.3rem"><span>' + e[0] + '</span><span>' + e[1] + ' sessions</span></div><div style="background:#0a1f14;border-radius:4px;height:8px"><div style="background:linear-gradient(90deg,#2d9e6b,#4ad490);height:8px;border-radius:4px;width:' + pct + '%"></div></div>';
-    }).join('');
-  }
-}
-
-// ── CHECKOUT ───────────────────────────────────────
-function startCheckout() {
-  var email = document.getElementById('upgrade-email').value;
-  if (!email) { showToast('Please enter your email'); return; }
-  fetch('/checkout', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({email: email})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) { if (d.url) window.location.href = d.url; else showToast('Checkout error: ' + (d.error||'unknown')); })
-  .catch(function() { showToast('Connection error'); });
-}
-
-// ── INIT ───────────────────────────────────────────
-document.querySelectorAll('.nav-tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    showView(this.getAttribute('data-view'));
-  });
-});
-
-if (new URLSearchParams(window.location.search).get('upgrade') === 'success') {
-  state.plan = 'pro';
-  document.getElementById('plan-badge').textContent = 'Pro Plan';
-  showToast('Welcome to Pro! Unlimited access unlocked.');
-}
-
-showView('dashboard');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+if(new URLSearchParams(window.location.search).get('upgrade')==='success'){toast('Welcome to Pro — unlimited access unlocked.');}
 </script>
 </body>
 </html>
